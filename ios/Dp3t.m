@@ -1,18 +1,47 @@
-#import "Dp3t.h"
+#import <React/RCTBridgeModule.h>
+#import "React/RCTEventEmitter.h"
 
-@implementation Dp3t
+@interface RCT_EXTERN_MODULE(Dp3t, RCTEventEmitter)
 
-RCT_EXPORT_MODULE()
+RCT_EXTERN_METHOD(
+                  initWithDiscovery: (NSString)backendAppId
+                  dev: (NSBoolean) dev
+                  resolve: (RCTPromiseResolveBlock)resolve
+                  reject: (RCTPromiseRejectBlock)reject
+                  )
 
-// Example method
-// See // https://facebook.github.io/react-native/docs/native-modules-ios
-RCT_REMAP_METHOD(getDeviceName,
-                 findEventsWithResolver:(RCTPromiseResolveBlock)resolve
-                 rejecter:(RCTPromiseRejectBlock)reject)
-{
-  UIDevice *deviceInfo = [UIDevice currentDevice];
+RCT_EXTERN_METHOD(
+                  initManually: (NSString)backendAppId
+                  backendBaseUrl: (NSString) backendBaseUrl
+                  resolve: (RCTPromiseResolveBlock)resolve
+                  reject: (RCTPromiseRejectBlock)reject
+                  )
 
-  resolve(deviceInfo.name);
-}
+RCT_EXTERN_METHOD(
+                  start: (RCTPromiseResolveBlock)resolve
+                  reject: (RCTPromiseRejectBlock)reject
+                  )
+
+RCT_EXTERN_METHOD(
+                  stop: (RCTPromiseResolveBlock)resolve
+                  reject: (RCTPromiseRejectBlock)reject
+                  )
+
+RCT_EXTERN_METHOD(
+                  currentTracingStatus: (RCTPromiseResolveBlock)resolve
+                  reject: (RCTPromiseRejectBlock)reject
+                  )
+
+RCT_EXTERN_METHOD(
+                  sendIWasExposed: (NSDate)onset
+                  authString: (NSString)authString
+                  resolve: (RCTPromiseResolveBlock)resolve
+                  reject: (RCTPromiseRejectBlock)reject
+                  )
+
+RCT_EXTERN_METHOD(
+                  clearData: (RCTPromiseResolveBlock)resolve
+                  reject: (RCTPromiseRejectBlock)reject
+                  )
 
 @end

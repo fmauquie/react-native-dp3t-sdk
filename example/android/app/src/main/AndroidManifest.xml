@@ -1,5 +1,5 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-  package="com.Dp3tExample">
+  package="com.reactnativedp3t.example">
 
     <uses-permission android:name="android.permission.INTERNET" />
 

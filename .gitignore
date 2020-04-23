@@ -34,7 +34,7 @@ project.xcworkspace
 .idea
 .gradle
 local.properties
-android.iml
+*.iml
 
 # Cocoapods
 #
