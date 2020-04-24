@@ -3,6 +3,8 @@ import DP3TSDK
 
 @objc(Dp3t)
 class Dp3t: RCTEventEmitter, DP3TTracingDelegate {
+    var initialized: Bool = false
+    var observing: Bool = false
     
     override func supportedEvents() -> [String]! {
       return ["Dp3tStatusUpdated"]
@@ -20,7 +22,10 @@ class Dp3t: RCTEventEmitter, DP3TTracingDelegate {
     }
     
     override func startObserving() -> Void {
-        DP3TTracing.delegate = self
+        observing = true
+        if (initialized) {
+            DP3TTracing.delegate = self
+        }
     }
     
     func DP3TTracingStateChanged(_ state: TracingState) {
@@ -28,7 +33,10 @@ class Dp3t: RCTEventEmitter, DP3TTracingDelegate {
     }
     
     override func stopObserving() -> Void {
-        DP3TTracing.delegate = nil
+        observing = false
+        if (initialized) {
+            DP3TTracing.delegate = nil
+        }
     }
     
     @objc
@@ -36,6 +44,10 @@ class Dp3t: RCTEventEmitter, DP3TTracingDelegate {
         do {
             try DP3TTracing.initialize(with: .discovery(backendAppId, enviroment: dev ? .dev : .prod))
             resolve(nil)
+            initialized = true
+            if (observing) {
+                DP3TTracing.delegate = self
+            }
         } catch {
             reject("DP3TError", "DP3TError in initWithDiscovery", error)
         }
@@ -47,6 +59,10 @@ class Dp3t: RCTEventEmitter, DP3TTracingDelegate {
             let url = URL(string: backendBaseUrl)!
             try DP3TTracing.initialize(with: .manual(.init(appId: backendAppId, backendBaseUrl: url)))
             resolve(nil)
+            initialized = true
+            if (observing) {
+                DP3TTracing.delegate = self
+            }
         } catch {
             reject("DP3TError", "DP3TError in initManually", error)
         }
@@ -54,6 +70,11 @@ class Dp3t: RCTEventEmitter, DP3TTracingDelegate {
 
     @objc
     func start(_ resolve: RCTPromiseResolveBlock, reject: RCTPromiseRejectBlock) {
+        guard initialized else {
+            reject("DP3TNotInitialized", "DP3T was not initialized.", nil)
+            return
+        }
+        
         do {
             try DP3TTracing.startTracing()
             resolve(nil)
@@ -64,12 +85,22 @@ class Dp3t: RCTEventEmitter, DP3TTracingDelegate {
 
     @objc
     func stop(_ resolve: RCTPromiseResolveBlock, reject: RCTPromiseRejectBlock) {
+        guard initialized else {
+            reject("DP3TNotInitialized", "DP3T was not initialized.", nil)
+            return
+        }
+        
         DP3TTracing.stopTracing()
         resolve(nil)
     }
     
     @objc
-    func currentTracingStatus(_ resolve: RCTPromiseResolveBlock, reject: RCTPromiseRejectBlock) {
+    func currentTracingStatus(_ resolve: @escaping RCTPromiseResolveBlock, reject: @escaping RCTPromiseRejectBlock) {
+        guard initialized else {
+            reject("DP3TNotInitialized", "DP3T was not initialized.", nil)
+            return
+        }
+        
         DP3TTracing.status { result in
             switch result {
             case let .success(state):
@@ -82,6 +113,11 @@ class Dp3t: RCTEventEmitter, DP3TTracingDelegate {
     
     @objc
     func sendIWasExposed(_ onset: Date, authString: String, resolve: @escaping RCTPromiseResolveBlock, reject: @escaping RCTPromiseRejectBlock) {
+        guard initialized else {
+            reject("DP3TNotInitialized", "DP3T was not initialized.", nil)
+            return
+        }
+        
         DP3TTracing.iWasExposed(onset: Date(), authString: "") { result in
             switch result {
             case .success:
@@ -94,6 +130,11 @@ class Dp3t: RCTEventEmitter, DP3TTracingDelegate {
     
     @objc
     func clearData(_ resolve: RCTPromiseResolveBlock, reject: RCTPromiseRejectBlock) {
+        guard initialized else {
+            reject("DP3TNotInitialized", "DP3T was not initialized.", nil)
+            return
+        }
+        
         do {
             try DP3TTracing.reset()
             resolve(nil)
