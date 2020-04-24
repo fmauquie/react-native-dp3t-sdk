@@ -13,6 +13,7 @@ npm install react-native-dp3t
 [Customize the tracing notification](https://github.com/DP-3T/dp3t-sdk-android#customize-tracing-notification) as in the Android SDK
 
 You have to make changes in `build.gradle`:
+
 - `minSdkVersion` to 23 or above, as the Android DP3T SDK dos not support lower versions.
 - `compileSdkVersion` to 29 or above, to fulfill the requirement for `android:foregroundServiceType` in Android Q (set by the Android DP3T SDK).
 
@@ -44,6 +45,11 @@ import Dp3t from 'react-native-dp3t';
 
 const deviceName = await Dp3t.getDeviceName();
 ```
+
+## Testing / Contributing
+
+Read [contributing guidelines](./CONTRIBUTING.md)
+Read [implementation notes](./docs/implementation-notes.md)
 
 ## License
 
