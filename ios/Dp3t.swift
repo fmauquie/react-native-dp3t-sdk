@@ -68,6 +68,8 @@ class Dp3t: RCTEventEmitter, DP3TTracingDelegate {
             case let .databaseError(dError):
                 nativeErrorArg = dError
                 errors.append("other")
+            case .jwtSignitureError:
+                errors.append("other")
             }
         }
         
@@ -91,7 +93,7 @@ class Dp3t: RCTEventEmitter, DP3TTracingDelegate {
             "nativeErrors": nativeErrors
         ] as [String : Any]
         if (state.lastSync != nil) {
-            res["lastSyncDate"] = String(format: "%d", state.lastSync!.timeIntervalSince1970)
+            res["lastSyncDate"] = (state.lastSync!.timeIntervalSince1970 * 1000).description
         }
         if (nativeErrorArg != nil) {
             res["nativeErrorArg"] = nativeErrorArg
@@ -123,8 +125,9 @@ class Dp3t: RCTEventEmitter, DP3TTracingDelegate {
     @objc
     func initManually(_ backendAppId: String, reportBaseUrl: String, bucketBaseUrl: String, resolve: RCTPromiseResolveBlock, reject: RCTPromiseRejectBlock) -> Void {
         do {
-            let url = URL(string: reportBaseUrl)!
-            try DP3TTracing.initialize(with: .manual(.init(appId: backendAppId, backendBaseUrl: url)))
+            let reportUrl = URL(string: reportBaseUrl)!
+            let bucketUrl = URL(string: bucketBaseUrl)!
+            try DP3TTracing.initialize(with: .manual(.init(appId: backendAppId, bucketBaseUrl: bucketUrl, reportBaseUrl: reportUrl, jwtPublicKey: nil)))
             initialized = true
             DP3TTracing.delegate = self
             resolve(nil)
@@ -183,7 +186,7 @@ class Dp3t: RCTEventEmitter, DP3TTracingDelegate {
             return
         }
         
-        DP3TTracing.iWasExposed(onset: Date(), authString: "") { result in
+        DP3TTracing.iWasExposed(onset: onset, authentication: .HTTPAuthorizationBearer(token: authString)) { result in
             switch result {
             case .success:
                 resolve(nil)

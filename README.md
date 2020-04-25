@@ -28,11 +28,13 @@ This may only be necessary until the Android SDK uses official Google DP3T suppo
 
 ## Necessary manual iOS setup
 
-Minimum iOS version is 10 for DP3T iOS SDK, so you need to change the verison to (at least) 10.0 in your iOS Podfile.
+Minimum iOS version is 11 for DP3T iOS SDK, so you need to change the verison to (at least) 11.0 in your iOS Podfile.
 
 You have to add the [react-native-swift](https://github.com/rhdeck/react-native-swift) package and run `react-native swiftify` and run `pod install` again, because this native module (and the DP3T iOS SDK) use Swift.
 
 [Add bluetooth capabilities](https://github.com/DP-3T/dp3t-sdk-ios#start--stop-tracing) to your Info.plist file.
+
+You have to add `pod 'DP3TSDK', :git => "https://github.com/fmauquie/dp3t-sdk-ios.git", :branch => 'develop'` in your Podfile until [Pull Request #49](https://github.com/DP-3T/dp3t-sdk-ios/pull/49) is merged.
 
 This implementation does not yet support requesting the permissions to use Bluetooth in iOS.
 

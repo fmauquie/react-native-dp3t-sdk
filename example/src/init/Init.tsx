@@ -28,7 +28,7 @@ export const Init: FunctionComponent<RouteComponentProps> = ({
   const [previousBackends, addBackend] = usePreviousBackends();
   const [error, setError] = useState<Error | null>(null);
   const [manualBackendAppId, setManualBackendAppId] = useState('');
-  const [manualBackendBaseUrl, setManualBackendBaseUrl] = useState('');
+  const [manualReportBaseUrl, setManualReportBaseUrl] = useState('');
   const [manualBucketBaseUrl, setManualBucketBaseUrl] = useState('');
 
   const connectBackend = useCallback(
@@ -156,14 +156,14 @@ export const Init: FunctionComponent<RouteComponentProps> = ({
                   />
                 </InputContainer>
                 <InputContainer>
-                  <InputLabel>Base/Report URL:</InputLabel>
+                  <InputLabel>Report Base URL:</InputLabel>
                   <StyledInput
-                    value={manualBackendBaseUrl}
-                    onChangeText={setManualBackendBaseUrl}
+                    value={manualReportBaseUrl}
+                    onChangeText={setManualReportBaseUrl}
                   />
                 </InputContainer>
                 <InputContainer>
-                  <InputLabel>Bucket URL:</InputLabel>
+                  <InputLabel>Bucket Base URL:</InputLabel>
                   <StyledInput
                     value={manualBucketBaseUrl}
                     onChangeText={setManualBucketBaseUrl}
@@ -174,7 +174,7 @@ export const Init: FunctionComponent<RouteComponentProps> = ({
                     connectBackend({
                       type: 'manual',
                       backendAppId: manualBackendAppId,
-                      backendBaseUrl: manualBackendBaseUrl,
+                      backendBaseUrl: manualReportBaseUrl,
                       bucketBaseUrl: manualBucketBaseUrl,
                     })
                   }

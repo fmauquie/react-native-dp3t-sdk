@@ -1,8 +1,13 @@
 PODS:
+  - BlueCryptor (1.0.32)
+  - BlueECC (1.2.5)
+  - BlueRSA (1.0.34)
   - boost-for-react-native (1.63.0)
   - DoubleConversion (1.1.6)
   - DP3TSDK (0.0.1):
     - SQLite.swift (~> 0.12)
+    - SwiftJWT (~> 3.5)
+    - SwiftProtobuf (~> 1.6)
   - FBLazyVector (0.61.5)
   - FBReactNativeSpec (0.61.5):
     - Folly (= 2018.10.22.00)
@@ -21,6 +26,11 @@ PODS:
     - DoubleConversion
     - glog
   - glog (0.3.5)
+  - KituraContracts (1.2.1):
+    - LoggerAPI (~> 1.7)
+  - LoggerAPI (1.9.0):
+    - Logging (~> 1.1)
+  - Logging (1.2.0)
   - RCTRequired (0.61.5)
   - RCTTypeSafety (0.61.5):
     - FBLazyVector (= 0.61.5)
@@ -231,10 +241,18 @@ PODS:
   - SQLite.swift (0.12.2):
     - SQLite.swift/standard (= 0.12.2)
   - SQLite.swift/standard (0.12.2)
+  - SwiftJWT (3.5.3):
+    - BlueCryptor (~> 1.0)
+    - BlueECC (~> 1.1)
+    - BlueRSA (~> 1.0)
+    - KituraContracts (~> 1.1)
+    - LoggerAPI (~> 1.7)
+  - SwiftProtobuf (1.8.0)
   - Yoga (1.14.0)
 
 DEPENDENCIES:
   - DoubleConversion (from `../node_modules/react-native/third-party-podspecs/DoubleConversion.podspec`)
+  - DP3TSDK (from `https://github.com/fmauquie/dp3t-sdk-ios.git`, branch `develop`)
   - FBLazyVector (from `../node_modules/react-native/Libraries/FBLazyVector`)
   - FBReactNativeSpec (from `../node_modules/react-native/Libraries/FBReactNativeSpec`)
   - Folly (from `../node_modules/react-native/third-party-podspecs/Folly.podspec`)
@@ -269,13 +287,23 @@ DEPENDENCIES:
 
 SPEC REPOS:
   trunk:
+    - BlueCryptor
+    - BlueECC
+    - BlueRSA
     - boost-for-react-native
-    - DP3TSDK
+    - KituraContracts
+    - LoggerAPI
+    - Logging
     - SQLite.swift
+    - SwiftJWT
+    - SwiftProtobuf
 
 EXTERNAL SOURCES:
   DoubleConversion:
     :podspec: "../node_modules/react-native/third-party-podspecs/DoubleConversion.podspec"
+  DP3TSDK:
+    :branch: develop
+    :git: https://github.com/fmauquie/dp3t-sdk-ios.git
   FBLazyVector:
     :path: "../node_modules/react-native/Libraries/FBLazyVector"
   FBReactNativeSpec:
@@ -333,14 +361,25 @@ EXTERNAL SOURCES:
   Yoga:
     :path: "../node_modules/react-native/ReactCommon/yoga"
 
+CHECKOUT OPTIONS:
+  DP3TSDK:
+    :commit: 264692dc10e03bd4ae95ff19810eff79386c05bd
+    :git: https://github.com/fmauquie/dp3t-sdk-ios.git
+
 SPEC CHECKSUMS:
+  BlueCryptor: b0aee3d9b8f367b49b30de11cda90e1735571c24
+  BlueECC: 0d18e93347d3ec6d41416de21c1ffa4d4cd3c2cc
+  BlueRSA: 6f9776d62d9773502415a7db3bcbb2bbb3f71fc3
   boost-for-react-native: 39c7adb57c4e60d6c5479dd8623128eb5b3f0f2c
   DoubleConversion: 5805e889d232975c086db112ece9ed034df7a0b2
-  DP3TSDK: f4966e56306af9e2799ccc447e5f55ce4e81524b
+  DP3TSDK: 981e9c26156b482f6402315c316f96b0d5d3d929
   FBLazyVector: aaeaf388755e4f29cd74acbc9e3b8da6d807c37f
   FBReactNativeSpec: 118d0d177724c2d67f08a59136eb29ef5943ec75
   Folly: 30e7936e1c45c08d884aa59369ed951a8e68cf51
   glog: 1f3da668190260b06b429bb211bfbee5cd790c28
+  KituraContracts: e845e60dc8627ad0a76fa55ef20a45451d8f830b
+  LoggerAPI: fb78461eedac5316b290f2404d88b9d614d96c57
+  Logging: 7838d379d234d7e5ae1265fa02804a9084caf04c
   RCTRequired: b153add4da6e7dbc44aebf93f3cf4fcae392ddf1
   RCTTypeSafety: 9aa1b91d7f9310fc6eadc3cf95126ffe818af320
   React: b6a59ef847b2b40bb6e0180a97d0ca716969ac78
@@ -350,7 +389,7 @@ SPEC CHECKSUMS:
   React-jsi: cb2cd74d7ccf4cffb071a46833613edc79cdf8f7
   React-jsiexecutor: d5525f9ed5f782fdbacb64b9b01a43a9323d2386
   React-jsinspector: fa0ecc501688c3c4c34f28834a76302233e29dc0
-  react-native-dp3t: c77d706de5a9c19555ad6b066c79604193e86310
+  react-native-dp3t: fa2a6a6c1a61b3e4f9fcf2285fe23d8fa11901fd
   react-native-safe-area-context: e200d4433aba6b7e60b52da5f37af11f7a0b0392
   React-RCTActionSheet: 600b4d10e3aea0913b5a92256d2719c0cdd26d76
   React-RCTAnimation: 791a87558389c80908ed06cc5dfc5e7920dfa360
@@ -365,8 +404,10 @@ SPEC CHECKSUMS:
   RNCAsyncStorage: 453cd7c335ec9ba3b877e27d02238956b76f3268
   RNVectorIcons: 0bb4def82230be1333ddaeee9fcba45f0b288ed4
   SQLite.swift: d2b4642190917051ce6bd1d49aab565fe794eea3
+  SwiftJWT: 9a47a71090cae25767078756b5810e3b630aa9a7
+  SwiftProtobuf: 2cbd9409689b7df170d82a92a33443c8e3e14a70
   Yoga: f2a7cd4280bfe2cca5a7aed98ba0eb3d1310f18b
 
-PODFILE CHECKSUM: 2c4f117aee57009c54354c39bb0a95a51fa30029
+PODFILE CHECKSUM: 40d24766914b6cd0ce802639383b5f3569cc942f
 
-COCOAPODS: 1.8.3
+COCOAPODS: 1.9.1

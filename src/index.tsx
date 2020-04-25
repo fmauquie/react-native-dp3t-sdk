@@ -142,10 +142,10 @@ export function initWithDiscovery(
 
 export function initManually(
   backendAppId: string,
-  backendBaseUrl: string,
+  reportBaseUrl: string,
   bucketBaseUrl: string
 ): Promise<void> {
-  return Dp3t.initManually(backendAppId, backendBaseUrl, bucketBaseUrl);
+  return Dp3t.initManually(backendAppId, reportBaseUrl, bucketBaseUrl);
 }
 
 export function start(): Promise<void> {
