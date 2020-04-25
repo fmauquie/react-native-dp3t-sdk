@@ -4,8 +4,13 @@
 @interface RCT_EXTERN_MODULE(Dp3t, RCTEventEmitter)
 
 RCT_EXTERN_METHOD(
+                  isInitialized: (RCTPromiseResolveBlock)resolve
+                  reject: (RCTPromiseRejectBlock)reject
+                  )
+
+RCT_EXTERN_METHOD(
                   initWithDiscovery: (NSString)backendAppId
-                  dev: (NSBoolean) dev
+                  dev: (BOOL) dev
                   resolve: (RCTPromiseResolveBlock)resolve
                   reject: (RCTPromiseRejectBlock)reject
                   )

@@ -1,3 +1,6 @@
 <resources>
-    <string name="app_name">Dp3t Example</string>
+  <string name="app_name">Dp3t Example</string>
+  <string name="dp3t_sdk_service_notification_channel">RN DP3T Example</string>
+  <string name="dp3t_sdk_service_notification_title">RN DP3T Example</string>
+  <string name="dp3t_sdk_service_notification_text">Looking for people nearby…</string>
 </resources>

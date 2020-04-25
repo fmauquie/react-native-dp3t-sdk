@@ -23,31 +23,98 @@ class Dp3t: RCTEventEmitter, DP3TTracingDelegate {
     
     override func startObserving() -> Void {
         observing = true
-        if (initialized) {
-            DP3TTracing.delegate = self
-        }
     }
     
     func DP3TTracingStateChanged(_ state: TracingState) {
-        sendEvent(withName: "Dp3tStatusUpdated", body: state)
+        if (observing) {
+            sendEvent(withName: "Dp3tStatusUpdated", body: toJSStatus(state))
+        }
     }
     
     override func stopObserving() -> Void {
         observing = false
-        if (initialized) {
-            DP3TTracing.delegate = nil
+    }
+    
+    func toJSStatus(_ state: TracingState) -> [AnyHashable : Any]! {
+        var errors: [String] = []
+        var nativeErrors: [String] = []
+        var nativeErrorArg: Any? = nil
+        var tracingState = ""
+        switch state.trackingState {
+        case .active:
+            tracingState = "started"
+        case .stopped:
+            tracingState = "stopped"
+        case let .inactive(error):
+            tracingState = "error"
+            nativeErrors.append(error.localizedDescription)
+            switch error {
+            case .bluetoothTurnedOff:
+                errors.append("bluetoothDisabled")
+            case .permissonError:
+                errors.append("permissionMissing")
+            case let .caseSynchronizationError(syncError):
+                nativeErrorArg = syncError
+                errors.append("sync")
+            case let .networkingError(netError):
+                nativeErrorArg = netError
+                errors.append("sync")
+            case let .timeInconsistency(shift):
+                nativeErrorArg = String(format: "%d", shift)
+                errors.append("sync")
+            case let .cryptographyError(cError):
+                nativeErrorArg = cError
+                errors.append("other")
+            case let .databaseError(dError):
+                nativeErrorArg = dError
+                errors.append("other")
+            }
         }
+        
+        var healthStatus = ""
+        var nativeStatusArg: Int? = nil
+        switch state.infectionStatus {
+        case .healthy:
+            healthStatus = "healthy"
+        case .infected:
+            healthStatus = "infected"
+        case let .exposed(days):
+            healthStatus = "exposed"
+            nativeStatusArg = days.count
+        }
+        
+        var res = [
+            "tracingState": tracingState,
+            "numberOfHandshakes": state.numberOfHandshakes,
+            "healthStatus": healthStatus,
+            "errors": errors,
+            "nativeErrors": nativeErrors
+        ] as [String : Any]
+        if (state.lastSync != nil) {
+            res["lastSyncDate"] = String(format: "%d", state.lastSync!.timeIntervalSince1970)
+        }
+        if (nativeErrorArg != nil) {
+            res["nativeErrorArg"] = nativeErrorArg
+        }
+        if (nativeStatusArg != nil) {
+            res["nativeStatusArg"] = nativeStatusArg
+        }
+        
+        return res
+    }
+    
+    @objc
+    func isInitialized(_ resolve: RCTPromiseResolveBlock, reject: RCTPromiseRejectBlock) {
+        resolve(initialized);
     }
     
     @objc
     func initWithDiscovery(_ backendAppId: String, dev: Bool, resolve: RCTPromiseResolveBlock, reject: RCTPromiseRejectBlock) -> Void {
         do {
             try DP3TTracing.initialize(with: .discovery(backendAppId, enviroment: dev ? .dev : .prod))
-            resolve(nil)
             initialized = true
-            if (observing) {
-                DP3TTracing.delegate = self
-            }
+            DP3TTracing.delegate = self
+            resolve(nil)
         } catch {
             reject("DP3TError", "DP3TError in initWithDiscovery", error)
         }
@@ -58,11 +125,9 @@ class Dp3t: RCTEventEmitter, DP3TTracingDelegate {
         do {
             let url = URL(string: backendBaseUrl)!
             try DP3TTracing.initialize(with: .manual(.init(appId: backendAppId, backendBaseUrl: url)))
-            resolve(nil)
             initialized = true
-            if (observing) {
-                DP3TTracing.delegate = self
-            }
+            DP3TTracing.delegate = self
+            resolve(nil)
         } catch {
             reject("DP3TError", "DP3TError in initManually", error)
         }
@@ -95,7 +160,7 @@ class Dp3t: RCTEventEmitter, DP3TTracingDelegate {
     }
     
     @objc
-    func currentTracingStatus(_ resolve: @escaping RCTPromiseResolveBlock, reject: @escaping RCTPromiseRejectBlock) {
+    func currentTracingStatus(_ resolve: RCTPromiseResolveBlock, reject: RCTPromiseRejectBlock) {
         guard initialized else {
             reject("DP3TNotInitialized", "DP3T was not initialized.", nil)
             return
@@ -104,7 +169,7 @@ class Dp3t: RCTEventEmitter, DP3TTracingDelegate {
         DP3TTracing.status { result in
             switch result {
             case let .success(state):
-                resolve(state)
+                resolve(toJSStatus(state))
             case let .failure(error):
                 reject("DP3TError", "Failed to get currentTracingStatus", error)
             }

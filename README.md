@@ -8,6 +8,8 @@ DP3T native bindings for React Native
 npm install react-native-dp3t
 ```
 
+This lib does not work on emulators or simulators, and will crash or burn incomprehensibly. Run on physical devices.
+
 ## Necessary manual Android setup
 
 [Customize the tracing notification](https://github.com/DP-3T/dp3t-sdk-android#customize-tracing-notification) as in the Android SDK

@@ -80,6 +80,10 @@ project.ext.react = [
     enableHermes: false,  // clean and rebuild if changing
 ]
 
+project.ext.vectoricons = [
+  iconFontNames: [ 'MaterialIcons.ttf' ] // https://github.com/oblador/react-native-vector-icons#option-with-gradle-recommended
+]
+
 apply from: "../../node_modules/react-native/react.gradle"
 
 /**

@@ -18,7 +18,8 @@ import java.util.*
 import kotlin.concurrent.thread
 
 class Dp3tModule(reactContext: ReactApplicationContext) : ReactContextBaseJavaModule(reactContext) {
-  private var updateIntentReceiverRegistered = true
+  private var updateIntentReceiverRegistered = false
+  private var initialized = false
   private var syncThread: Thread? = null
 
   override fun getName(): String {
@@ -36,16 +37,50 @@ class Dp3tModule(reactContext: ReactApplicationContext) : ReactContextBaseJavaMo
     return constants
   }
 
+  private fun toJSStatus(status: TracingStatus): WritableMap {
+    val map = Arguments.createMap()
+
+    val tracingState = if (status.errors.size > 0) "error" else if (status.isReceiving) "started" else "stopped"
+    val healthStatus = if (status.wasContactExposed()) "exposed" else if (status.isReportedAsExposed) "testedPositive" else "healthy"
+
+    map.putString("tracingState", tracingState)
+    map.putInt("numberOfHandshakes", status.numberOfHandshakes)
+    map.putString("healthStatus", healthStatus)
+
+    if (status.lastSyncDate > 0) {
+      map.putString("lastSyncDate", status.lastSyncDate.toString(10))
+    }
+
+    val errors = Arguments.createArray();
+    val nativeErrors = Arguments.createArray()
+    status.errors.forEach {
+      nativeErrors.pushString(it.name)
+      when (it) {
+        TracingStatus.ErrorState.BLE_DISABLED -> errors.pushString("bluetoothDisabled")
+        TracingStatus.ErrorState.MISSING_LOCATION_PERMISSION, TracingStatus.ErrorState.BATTERY_OPTIMIZER_ENABLED -> errors.pushString("permissionMissing")
+        TracingStatus.ErrorState.NETWORK_ERROR_WHILE_SYNCING -> errors.pushString("sync")
+        else -> errors.pushString("other") // Actually not used at the time of writing for Android
+      }
+    }
+    map.putArray("errors", errors)
+    map.putArray("nativeErrors", nativeErrors)
+
+    return map
+  }
+
   // See https://facebook.github.io/react-native/docs/native-modules-android
+  @ReactMethod
+  fun isInitialized(promise: Promise) {
+    promise.resolve(initialized);
+  }
+
   @ReactMethod
   fun initWithDiscovery(backendAppId: String, dev: Boolean, promise: Promise) {
     try {
-      checkBatteryOptimizationDeactivated()
-
+      registerUpdateIntentReceiver()
       DP3T.init(reactApplicationContext.applicationContext, backendAppId, dev)
 
-      registerUpdateIntentReceiver();
-
+      initialized = true
       promise.resolve(null)
     } catch (throwable: Throwable) {
       promise.reject(throwable);
@@ -55,26 +90,32 @@ class Dp3tModule(reactContext: ReactApplicationContext) : ReactContextBaseJavaMo
   @ReactMethod
   fun initManually(backendAppId: String, backendBaseUrl: String, promise: Promise) {
     try {
-      checkBatteryOptimizationDeactivated()
-
+      registerUpdateIntentReceiver()
       DP3T.init(reactApplicationContext.applicationContext, ApplicationInfo(backendAppId, backendBaseUrl))
 
-      registerUpdateIntentReceiver();
-
+      initialized = true
       promise.resolve(null)
     } catch (throwable: Throwable) {
       promise.reject(throwable);
     }
   }
 
+  @ReactMethod
   @SuppressLint("BatteryLife") // Reason for using intent Settings.ACTION_REQUEST_IGNORE_BATTERY_OPTIMIZATIONS is explained in module's Readme
-  private fun checkBatteryOptimizationDeactivated() {
-    val powerManager = reactApplicationContext.getSystemService(Context.POWER_SERVICE) as PowerManager
-    val batteryOptimizationDeactivated = powerManager.isIgnoringBatteryOptimizations(reactApplicationContext.packageName)
+  public fun checkBatteryOptimizationDeactivated(promise: Promise) {
+    try {
+      val powerManager = reactApplicationContext.getSystemService(Context.POWER_SERVICE) as PowerManager
+      val batteryOptimizationDeactivated = powerManager.isIgnoringBatteryOptimizations(reactApplicationContext.packageName)
 
-    if (!batteryOptimizationDeactivated) {
-      reactApplicationContext.startActivity(Intent(Settings.ACTION_REQUEST_IGNORE_BATTERY_OPTIMIZATIONS,
-        Uri.parse("package:" + reactApplicationContext.packageName)))
+      if (!batteryOptimizationDeactivated) {
+        val intent = Intent(Settings.ACTION_REQUEST_IGNORE_BATTERY_OPTIMIZATIONS,
+          Uri.parse("package:" + reactApplicationContext.packageName))
+        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+        reactApplicationContext.startActivity(intent)
+      }
+      promise.resolve(null)
+    } catch (throwable: Throwable) {
+      promise.reject(throwable)
     }
   }
 
@@ -84,7 +125,7 @@ class Dp3tModule(reactContext: ReactApplicationContext) : ReactContextBaseJavaMo
         override fun onReceive(context: Context, intent: Intent) {
           reactApplicationContext
             .getJSModule(RCTDeviceEventEmitter::class.java)
-            .emit("Dp3tStatusUpdated", null)
+            .emit("Dp3tStatusUpdated", toJSStatus(DP3T.getStatus(reactApplicationContext.applicationContext)))
         }
       }, DP3T.getUpdateIntentFilter())
       updateIntentReceiverRegistered = true
@@ -116,22 +157,7 @@ class Dp3tModule(reactContext: ReactApplicationContext) : ReactContextBaseJavaMo
     try {
       val status = DP3T.getStatus(reactApplicationContext.applicationContext)
 
-      val map = Arguments.createMap()
-
-      map.putInt("numberOfHandshakes", status.numberOfHandshakes)
-      map.putBoolean("advertising", status.isAdvertising)
-      map.putBoolean("receiving", status.isReceiving)
-      map.putBoolean("wasContactExposed", status.wasContactExposed())
-      map.putString("lastSyncDate", status.lastSyncDate.toString(10))
-      map.putBoolean("reportedAsExposed", status.isReportedAsExposed)
-
-      val errors = Arguments.createArray();
-      status.errors.forEach {
-        errors.pushString(it.name)
-      }
-      map.putArray("errors", errors);
-
-      promise.resolve(map)
+      promise.resolve(toJSStatus(status))
     } catch (throwable: Throwable) {
       promise.reject(throwable)
     }
