@@ -17,7 +17,8 @@ RCT_EXTERN_METHOD(
 
 RCT_EXTERN_METHOD(
                   initManually: (NSString)backendAppId
-                  backendBaseUrl: (NSString) backendBaseUrl
+                  reportBaseUrl: (NSString) reportBaseUrl
+                  bucketBaseUrl: (NSString) bucketBaseUrl
                   resolve: (RCTPromiseResolveBlock)resolve
                   reject: (RCTPromiseRejectBlock)reject
                   )
@@ -38,9 +39,14 @@ RCT_EXTERN_METHOD(
                   )
 
 RCT_EXTERN_METHOD(
-                  sendIWasExposed: (NSDate)onset
+                  sendIAmInfected: (NSDate)onset
                   authString: (NSString)authString
                   resolve: (RCTPromiseResolveBlock)resolve
+                  reject: (RCTPromiseRejectBlock)reject
+                  )
+
+RCT_EXTERN_METHOD(
+                  sync: (RCTPromiseResolveBlock)resolve
                   reject: (RCTPromiseRejectBlock)reject
                   )
 

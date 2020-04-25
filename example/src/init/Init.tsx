@@ -29,12 +29,17 @@ export const Init: FunctionComponent<RouteComponentProps> = ({
   const [error, setError] = useState<Error | null>(null);
   const [manualBackendAppId, setManualBackendAppId] = useState('');
   const [manualBackendBaseUrl, setManualBackendBaseUrl] = useState('');
+  const [manualBucketBaseUrl, setManualBucketBaseUrl] = useState('');
 
   const connectBackend = useCallback(
     async function connectBackend(backend: Backend) {
       try {
         if (backend.type === 'manual') {
-          await initManually(backend.backendAppId, backend.backendBaseUrl);
+          await initManually(
+            backend.backendAppId,
+            backend.backendBaseUrl,
+            backend.bucketBaseUrl
+          );
         } else {
           await initWithDiscovery(backend.backendAppId, false);
         }
@@ -151,10 +156,17 @@ export const Init: FunctionComponent<RouteComponentProps> = ({
                   />
                 </InputContainer>
                 <InputContainer>
-                  <InputLabel>Base URL:</InputLabel>
+                  <InputLabel>Base/Report URL:</InputLabel>
                   <StyledInput
                     value={manualBackendBaseUrl}
                     onChangeText={setManualBackendBaseUrl}
+                  />
+                </InputContainer>
+                <InputContainer>
+                  <InputLabel>Bucket URL:</InputLabel>
+                  <StyledInput
+                    value={manualBucketBaseUrl}
+                    onChangeText={setManualBucketBaseUrl}
                   />
                 </InputContainer>
                 <Button
@@ -163,6 +175,7 @@ export const Init: FunctionComponent<RouteComponentProps> = ({
                       type: 'manual',
                       backendAppId: manualBackendAppId,
                       backendBaseUrl: manualBackendBaseUrl,
+                      bucketBaseUrl: manualBucketBaseUrl,
                     })
                   }
                   title="Connect"

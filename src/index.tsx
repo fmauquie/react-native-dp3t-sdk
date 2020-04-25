@@ -76,9 +76,9 @@ type HealthStatus =
    */
   | 'exposed'
   /**
-   * The user has declared they have been tested positive using sendIWasExposed().
+   * The user has declared they have been tested positive using sendIAmInfected().
    */
-  | 'testedPositive';
+  | 'infected';
 
 /**
  * Status of the tracing SDK
@@ -89,9 +89,11 @@ interface TracingStatus {
    */
   tracingState: TracingState;
   /**
-   * Number of handshakes with other phones
+   * Number of contacts on other phones.
+   *
+   * On Android, this is only updated on sync. Do not consider this information real-time.
    */
-  numberOfHandshakes: number;
+  numberOfContacts: number;
   /**
    * Current health status
    */
@@ -140,9 +142,10 @@ export function initWithDiscovery(
 
 export function initManually(
   backendAppId: string,
-  backendBaseUrl: string
+  backendBaseUrl: string,
+  bucketBaseUrl: string
 ): Promise<void> {
-  return Dp3t.initManually(backendAppId, backendBaseUrl);
+  return Dp3t.initManually(backendAppId, backendBaseUrl, bucketBaseUrl);
 }
 
 export function start(): Promise<void> {
@@ -160,15 +163,15 @@ export async function currentTracingStatus(): Promise<TracingStatus> {
 const convertStatus = (platformStatus: any) => ({
   ...platformStatus,
   lastSyncDate: platformStatus.lastSyncDate
-    ? new Date(parseInt(platformStatus.lastSyncDate, 10) * 1000)
+    ? new Date(parseInt(platformStatus.lastSyncDate, 10))
     : null,
 });
 
-export function sendIWasExposed(
+export function sendIAmInfected(
   onset: Date,
   authString: string
 ): Promise<void> {
-  return Dp3t.sendIWasExposed(
+  return Dp3t.sendIAmInfected(
     Platform.select({
       ios: onset.toISOString(),
       android: '' + onset.getTime() / 1000,

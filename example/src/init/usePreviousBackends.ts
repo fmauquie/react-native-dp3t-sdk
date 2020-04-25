@@ -6,6 +6,7 @@ export type Backend =
       type: 'manual';
       backendAppId: string;
       backendBaseUrl: string;
+      bucketBaseUrl: string;
     }
   | {
       type: 'discover';

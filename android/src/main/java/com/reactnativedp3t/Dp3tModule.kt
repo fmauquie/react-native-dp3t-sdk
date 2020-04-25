@@ -10,10 +10,11 @@ import android.provider.Settings
 import com.facebook.react.bridge.*
 import com.facebook.react.modules.core.DeviceEventManagerModule.RCTDeviceEventEmitter
 import org.dpppt.android.sdk.DP3T
+import org.dpppt.android.sdk.InfectionStatus
 import org.dpppt.android.sdk.TracingStatus
-import org.dpppt.android.sdk.internal.backend.CallbackListener
-import org.dpppt.android.sdk.internal.backend.models.ApplicationInfo
-import org.dpppt.android.sdk.internal.backend.models.ExposeeAuthData
+import org.dpppt.android.sdk.backend.ResponseCallback
+import org.dpppt.android.sdk.backend.models.ApplicationInfo
+import org.dpppt.android.sdk.backend.models.ExposeeAuthMethodAuthorization
 import java.util.*
 import kotlin.concurrent.thread
 
@@ -40,11 +41,11 @@ class Dp3tModule(reactContext: ReactApplicationContext) : ReactContextBaseJavaMo
   private fun toJSStatus(status: TracingStatus): WritableMap {
     val map = Arguments.createMap()
 
-    val tracingState = if (status.errors.size > 0) "error" else if (status.isReceiving) "started" else "stopped"
-    val healthStatus = if (status.wasContactExposed()) "exposed" else if (status.isReportedAsExposed) "testedPositive" else "healthy"
+    val tracingState = if (status.errors.isNotEmpty()) "error" else if (status.isReceiving) "started" else "stopped"
+    val healthStatus = if (status.infectionStatus == InfectionStatus.EXPOSED) "exposed" else if (status.infectionStatus == InfectionStatus.INFECTED) "infected" else "healthy"
 
     map.putString("tracingState", tracingState)
-    map.putInt("numberOfHandshakes", status.numberOfHandshakes)
+    map.putInt("numberOfContacts", status.numberOfContacts)
     map.putString("healthStatus", healthStatus)
 
     if (status.lastSyncDate > 0) {
@@ -59,7 +60,7 @@ class Dp3tModule(reactContext: ReactApplicationContext) : ReactContextBaseJavaMo
         TracingStatus.ErrorState.BLE_DISABLED -> errors.pushString("bluetoothDisabled")
         TracingStatus.ErrorState.MISSING_LOCATION_PERMISSION, TracingStatus.ErrorState.BATTERY_OPTIMIZER_ENABLED -> errors.pushString("permissionMissing")
         TracingStatus.ErrorState.NETWORK_ERROR_WHILE_SYNCING -> errors.pushString("sync")
-        else -> errors.pushString("other") // Actually not used at the time of writing for Android
+        else -> errors.pushString("other")
       }
     }
     map.putArray("errors", errors)
@@ -88,10 +89,10 @@ class Dp3tModule(reactContext: ReactApplicationContext) : ReactContextBaseJavaMo
   }
 
   @ReactMethod
-  fun initManually(backendAppId: String, backendBaseUrl: String, promise: Promise) {
+  fun initManually(backendAppId: String, reportBaseUrl: String, bucketBaseUrl: String, promise: Promise) {
     try {
       registerUpdateIntentReceiver()
-      DP3T.init(reactApplicationContext.applicationContext, ApplicationInfo(backendAppId, backendBaseUrl))
+      DP3T.init(reactApplicationContext.applicationContext, ApplicationInfo(backendAppId, reportBaseUrl, bucketBaseUrl))
 
       initialized = true
       promise.resolve(null)
@@ -164,12 +165,12 @@ class Dp3tModule(reactContext: ReactApplicationContext) : ReactContextBaseJavaMo
   }
 
   @ReactMethod
-  fun sendIWasExposed(timestamp: String, authString: String, promise: Promise) {
+  fun sendIAmInfected(timestamp: String, authString: String, promise: Promise) {
     try {
       val timestampLong = timestamp.toLong(10);
       val date = Date(timestampLong)
 
-      DP3T.sendIWasExposed(reactApplicationContext, date, ExposeeAuthData(authString), object : CallbackListener<Void?> {
+      DP3T.sendIAmInfected(reactApplicationContext, date, ExposeeAuthMethodAuthorization(authString), object : ResponseCallback<Void?> {
         override fun onSuccess(response: Void?) {
           promise.resolve(null)
         }

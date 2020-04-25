@@ -85,7 +85,7 @@ class Dp3t: RCTEventEmitter, DP3TTracingDelegate {
         
         var res = [
             "tracingState": tracingState,
-            "numberOfHandshakes": state.numberOfHandshakes,
+            "numberOfContacts": state.numberOfContacts,
             "healthStatus": healthStatus,
             "errors": errors,
             "nativeErrors": nativeErrors
@@ -121,9 +121,9 @@ class Dp3t: RCTEventEmitter, DP3TTracingDelegate {
     }
 
     @objc
-    func initManually(_ backendAppId: String, backendBaseUrl: String, resolve: RCTPromiseResolveBlock, reject: RCTPromiseRejectBlock) -> Void {
+    func initManually(_ backendAppId: String, reportBaseUrl: String, bucketBaseUrl: String, resolve: RCTPromiseResolveBlock, reject: RCTPromiseRejectBlock) -> Void {
         do {
-            let url = URL(string: backendBaseUrl)!
+            let url = URL(string: reportBaseUrl)!
             try DP3TTracing.initialize(with: .manual(.init(appId: backendAppId, backendBaseUrl: url)))
             initialized = true
             DP3TTracing.delegate = self
@@ -177,7 +177,7 @@ class Dp3t: RCTEventEmitter, DP3TTracingDelegate {
     }
     
     @objc
-    func sendIWasExposed(_ onset: Date, authString: String, resolve: @escaping RCTPromiseResolveBlock, reject: @escaping RCTPromiseRejectBlock) {
+    func sendIAmInfected(_ onset: Date, authString: String, resolve: @escaping RCTPromiseResolveBlock, reject: @escaping RCTPromiseRejectBlock) {
         guard initialized else {
             reject("DP3TNotInitialized", "DP3T was not initialized.", nil)
             return

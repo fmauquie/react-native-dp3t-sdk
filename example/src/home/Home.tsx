@@ -4,6 +4,7 @@ import {
   requestPermissions,
   start,
   stop,
+  sync,
   useDp3tStatus,
 } from 'react-native-dp3t';
 import Icon from 'react-native-vector-icons/MaterialIcons';
@@ -157,17 +158,17 @@ export const Home: FunctionComponent = () => {
             <Exposed>Exposed</Exposed>
           </ListItem>
         )}
-        {status.healthStatus === 'testedPositive' && (
+        {status.healthStatus === 'infected' && (
           <ListItem>
             <TestedPositive>Was tested positive</TestedPositive>
           </ListItem>
         )}
-        {status.healthStatus !== 'testedPositive' && (
+        {status.healthStatus !== 'infected' && (
           <ListItem>
             <Link
               to="/testPositive"
               component={Button}
-              title="I was tested positive"
+              title="I am infected (tested positive)"
             />
           </ListItem>
         )}
@@ -178,7 +179,22 @@ export const Home: FunctionComponent = () => {
         )}
         <Divider />
         <ListItem>
-          <Text>{status.numberOfHandshakes} handshakes with other phones</Text>
+          <Text>{status.numberOfContacts} contacts with other people</Text>
+        </ListItem>
+        <Divider />
+        <ListItem>
+          <Button
+            title="Force a sync"
+            onPress={async () => {
+              try {
+                await sync();
+              } catch (e) {
+                setError(e);
+              } finally {
+                refreshStatus();
+              }
+            }}
+          />
         </ListItem>
         <Divider />
         <ListItem>
