@@ -179,7 +179,10 @@ export const Home: FunctionComponent = () => {
         )}
         <Divider />
         <ListItem>
-          <Text>{status.numberOfContacts} contacts with other people</Text>
+          <Text>
+            {status.numberOfContacts} contacts with other people (updated on
+            sync)
+          </Text>
         </ListItem>
         <Divider />
         <ListItem>

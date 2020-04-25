@@ -194,6 +194,19 @@ class Dp3t: RCTEventEmitter, DP3TTracingDelegate {
     }
     
     @objc
+    func sync(_ resolve: @escaping RCTPromiseResolveBlock, reject: @escaping RCTPromiseRejectBlock) {
+        DP3TTracing.sync { result in
+            switch result {
+            case .success:
+                resolve(nil)
+            case let .failure(error):
+                print(error)
+                reject("DP3TError", "Failed to sync", error)
+            }
+        }
+    }
+    
+    @objc
     func clearData(_ resolve: RCTPromiseResolveBlock, reject: RCTPromiseRejectBlock) {
         guard initialized else {
             reject("DP3TNotInitialized", "DP3T was not initialized.", nil)
