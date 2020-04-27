@@ -34,7 +34,7 @@ The lib also ask the user to add your app to the battery optimization whitelist 
 
 The Play Store usually [prohibits this](https://developer.android.com/training/monitoring-device-state/doze-standby.html#support_for_other_use_cases),
 so you need to make sure the Play Store filing explains why this is necessary.
-This may only be necessary until the Android SDK uses official Google DP3T support, in which case we will adapt the permissions & warning sin this section.
+This may only be necessary until the Android SDK uses official Google DP3T support, in which case we will adapt the permissions & warnings in this section.
 
 ## Necessary manual iOS setup
 
