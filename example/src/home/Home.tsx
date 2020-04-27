@@ -174,7 +174,7 @@ export const Home: FunctionComponent = () => {
         )}
         {status.healthStatus === 'infected' && (
           <ListItem>
-            <TestedPositive>Was tested (I Am Infected)</TestedPositive>
+            <TestedPositive>I Am Infected (tested positive)</TestedPositive>
           </ListItem>
         )}
         {status.healthStatus !== 'infected' && (

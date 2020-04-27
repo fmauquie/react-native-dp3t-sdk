@@ -29,12 +29,7 @@ export const NavigationButton = withRouter(
   )
 );
 
-export const GoBackButton = ({
-  style,
-}: {
-  style?: ViewProps['style'];
-  page: string;
-}) => (
+export const GoBackButton = ({ style }: { style?: ViewProps['style'] }) => (
   <NavigationButton
     icon="arrow-back"
     style={style}

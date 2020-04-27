@@ -11,8 +11,7 @@ import {
   Switch,
 } from 'react-router-native';
 import { Container } from './common';
-import { Home } from './home';
-import { Init } from './init';
+import { Home, Init, TestPositive } from './home';
 import { NotFound } from './navigation';
 
 export default function App() {
@@ -39,6 +38,7 @@ const Routes: FunctionComponent = () => {
       <Redirect exact from="/" to="/home" />
       <Route path="/home" component={Home} />
       <Route path="/init" component={Init} />
+      <Route path="/testPositive" component={TestPositive} />
       <Route component={NotFound} />
     </Switch>
   );

@@ -156,4 +156,5 @@ export const StyledInput = styled.TextInput`
     keyboardType === 'numeric' ? 'right' : 'left'};
   padding: 0;
   margin: 0;
+  color: black;
 `;
