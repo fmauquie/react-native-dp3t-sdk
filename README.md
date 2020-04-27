@@ -4,7 +4,7 @@ DP3T native bindings for React Native.
 
 ## Status
 
-Pre-alpha. It requires some setup to work, it is not yet tested, and it can change without notice.
+Pre-alpha. Requires some manual setup to work. Not tested yet. Can change without notice.
 
 The [iOS SDK][iOS SDK] and [Android SDK][Android SDK] themselves are in alpha state.
 
