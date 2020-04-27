@@ -1,6 +1,12 @@
 # react-native-dp3t
 
-DP3T native bindings for React Native
+DP3T native bindings for React Native ([iOS SDK](https://github.com/DP-3T/dp3t-sdk-ios), [Android SDK](https://github.com/DP-3T/dp3t-sdk-android)).
+
+## Status
+
+Pre-alpha. It requires some setup to work, it is not yet tested, and it can change without notice.
+
+The SDKs themselves are in alpha state.
 
 ## Installation
 
