@@ -1,6 +1,6 @@
 # react-native-dp3t
 
-DP3T native bindings for React Native.
+DP3T bindings for React Native.
 
 ## Status
 
