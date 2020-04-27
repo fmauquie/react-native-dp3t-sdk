@@ -1,12 +1,15 @@
 # react-native-dp3t
 
-DP3T native bindings for React Native ([iOS SDK](https://github.com/DP-3T/dp3t-sdk-ios), [Android SDK](https://github.com/DP-3T/dp3t-sdk-android)).
+DP3T native bindings for React Native.
 
 ## Status
 
 Pre-alpha. It requires some setup to work, it is not yet tested, and it can change without notice.
 
-The SDKs themselves are in alpha state.
+The [iOS SDK][iOS SDK] and [Android SDK][Android SDK] themselves are in alpha state.
+
+This project is bootstraped from [bob][bob], see [implementation notes][implementation notes].
+
 
 ## Installation
 
@@ -66,7 +69,7 @@ const deviceName = await Dp3t.getDeviceName();
 ## Testing / Contributing
 
 Read [contributing guidelines](./CONTRIBUTING.md)
-Read [implementation notes](./docs/implementation-notes.md)
+Read [implementation notes][implementation notes]
 
 ## License
 
@@ -75,3 +78,10 @@ MIT
 ## Alternatives
 
 [Wix incubator](https://github.com/wix-incubator/rn-contact-tracing) is building a RN lib from scratch (they don't use DP3T SDK)
+
+
+
+[implementation notes]: ./docs/implementation-notes.md
+[iOS SDK]: https://github.com/DP-3T/dp3t-sdk-ios
+[Android SDK]: https://github.com/DP-3T/dp3t-sdk-android
+[bob]: https://github.com/react-native-community/bob
