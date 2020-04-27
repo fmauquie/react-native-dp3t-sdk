@@ -252,7 +252,7 @@ PODS:
 
 DEPENDENCIES:
   - DoubleConversion (from `../node_modules/react-native/third-party-podspecs/DoubleConversion.podspec`)
-  - DP3TSDK (from `https://github.com/fmauquie/dp3t-sdk-ios.git`, branch `develop`)
+  - DP3TSDK (from `https://github.com/DP-3T/dp3t-sdk-ios.git`, commit `13c009500dccd1488131a6b0c8ae69247b33a9b0`)
   - FBLazyVector (from `../node_modules/react-native/Libraries/FBLazyVector`)
   - FBReactNativeSpec (from `../node_modules/react-native/Libraries/FBReactNativeSpec`)
   - Folly (from `../node_modules/react-native/third-party-podspecs/Folly.podspec`)
@@ -302,8 +302,8 @@ EXTERNAL SOURCES:
   DoubleConversion:
     :podspec: "../node_modules/react-native/third-party-podspecs/DoubleConversion.podspec"
   DP3TSDK:
-    :branch: develop
-    :git: https://github.com/fmauquie/dp3t-sdk-ios.git
+    :commit: 13c009500dccd1488131a6b0c8ae69247b33a9b0
+    :git: https://github.com/DP-3T/dp3t-sdk-ios.git
   FBLazyVector:
     :path: "../node_modules/react-native/Libraries/FBLazyVector"
   FBReactNativeSpec:
@@ -363,8 +363,8 @@ EXTERNAL SOURCES:
 
 CHECKOUT OPTIONS:
   DP3TSDK:
-    :commit: 264692dc10e03bd4ae95ff19810eff79386c05bd
-    :git: https://github.com/fmauquie/dp3t-sdk-ios.git
+    :commit: 13c009500dccd1488131a6b0c8ae69247b33a9b0
+    :git: https://github.com/DP-3T/dp3t-sdk-ios.git
 
 SPEC CHECKSUMS:
   BlueCryptor: b0aee3d9b8f367b49b30de11cda90e1735571c24
@@ -408,6 +408,6 @@ SPEC CHECKSUMS:
   SwiftProtobuf: 2cbd9409689b7df170d82a92a33443c8e3e14a70
   Yoga: f2a7cd4280bfe2cca5a7aed98ba0eb3d1310f18b
 
-PODFILE CHECKSUM: 40d24766914b6cd0ce802639383b5f3569cc942f
+PODFILE CHECKSUM: 917368522595b1d8bb528d60c07d0d695a197f4f
 
 COCOAPODS: 1.9.1

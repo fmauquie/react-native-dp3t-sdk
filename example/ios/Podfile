@@ -36,7 +36,7 @@ target 'Dp3tExample' do
 
   pod 'react-native-dp3t', :path => '../..'
 
-  pod 'DP3TSDK', :git => "https://github.com/fmauquie/dp3t-sdk-ios.git", :branch => 'develop'
+  pod 'DP3TSDK', :git => "https://github.com/DP-3T/dp3t-sdk-ios.git", :commit => '13c009500dccd1488131a6b0c8ae69247b33a9b0'
 
   use_native_modules!
 end
