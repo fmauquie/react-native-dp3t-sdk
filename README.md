@@ -44,6 +44,8 @@ You have to add the [react-native-swift](https://github.com/rhdeck/react-native-
 
 [Add bluetooth capabilities](https://github.com/DP-3T/dp3t-sdk-ios#start--stop-tracing) to your Info.plist file.
 
+[Add background fetch configuration](https://github.com/DP-3T/dp3t-sdk-ios#background-tasks) to your Info.plist file.
+
 You have to add `pod 'DP3TSDK', :git => "https://github.com/DP-3T/dp3t-sdk-ios.git", :commit => 'COMMIT_ID''` in your Podfile until the SDK stabilizes, and a version is pushed on the Pods repo.
 Replace `COMMIT_ID` with `13c009500dccd1488131a6b0c8ae69247b33a9b0` (latest version supported, watch this file to follow the changes)
 

@@ -5,6 +5,19 @@ import DP3TSDK
 class Dp3t: RCTEventEmitter, DP3TTracingDelegate {
     var initialized: Bool = false
     var observing: Bool = false
+    var initialzerError: Error? = nil
+    
+    override init() {
+        super.init();
+        
+        do {
+            // Pre-initialize the sdk with dummy stuff to register the background sync
+            try DP3TTracing.initialize(with: .manual(.init(appId: "dummy", bucketBaseUrl: URL(string: "https://example.com")!, reportBaseUrl: URL(string: "https://example.com")!, jwtPublicKey: nil)))
+            try DP3TTracing.reset()
+        } catch {
+            initialzerError = error
+        }
+    }
     
     override func supportedEvents() -> [String]! {
       return ["Dp3tStatusUpdated"]
@@ -111,28 +124,32 @@ class Dp3t: RCTEventEmitter, DP3TTracingDelegate {
     }
     
     @objc
-    func initWithDiscovery(_ backendAppId: String, dev: Bool, resolve: RCTPromiseResolveBlock, reject: RCTPromiseRejectBlock) -> Void {
-        do {
-            try DP3TTracing.initialize(with: .discovery(backendAppId, enviroment: dev ? .dev : .prod))
-            initialized = true
-            DP3TTracing.delegate = self
-            resolve(nil)
-        } catch {
-            reject("DP3TError", "DP3TError in initWithDiscovery", error)
+    func initWithDiscovery(_ backendAppId: String, dev: Bool, resolve: @escaping RCTPromiseResolveBlock, reject: @escaping RCTPromiseRejectBlock) -> Void {
+        DispatchQueue.main.async {
+            do {
+                try DP3TTracing.initialize(with: .discovery(backendAppId, enviroment: dev ? .dev : .prod))
+                self.initialized = true
+                DP3TTracing.delegate = self
+                resolve(nil)
+            } catch {
+                reject("DP3TError", "DP3TError in initWithDiscovery", error)
+            }
         }
     }
 
     @objc
-    func initManually(_ backendAppId: String, reportBaseUrl: String, bucketBaseUrl: String, resolve: RCTPromiseResolveBlock, reject: RCTPromiseRejectBlock) -> Void {
-        do {
-            let reportUrl = URL(string: reportBaseUrl)!
-            let bucketUrl = URL(string: bucketBaseUrl)!
-            try DP3TTracing.initialize(with: .manual(.init(appId: backendAppId, bucketBaseUrl: bucketUrl, reportBaseUrl: reportUrl, jwtPublicKey: nil)))
-            initialized = true
-            DP3TTracing.delegate = self
-            resolve(nil)
-        } catch {
-            reject("DP3TError", "DP3TError in initManually", error)
+    func initManually(_ backendAppId: String, reportBaseUrl: String, bucketBaseUrl: String, resolve: @escaping RCTPromiseResolveBlock, reject: @escaping RCTPromiseRejectBlock) -> Void {
+        DispatchQueue.main.async {
+            do {
+                let reportUrl = URL(string: reportBaseUrl)!
+                let bucketUrl = URL(string: bucketBaseUrl)!
+                try DP3TTracing.initialize(with: .manual(.init(appId: backendAppId, bucketBaseUrl: bucketUrl, reportBaseUrl: reportUrl, jwtPublicKey: nil)))
+                self.initialized = true
+                DP3TTracing.delegate = self
+                resolve(nil)
+            } catch {
+                reject("DP3TError", "DP3TError in initManually", error)
+            }
         }
     }
 
