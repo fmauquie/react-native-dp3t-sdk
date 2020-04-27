@@ -68,8 +68,8 @@ const deviceName = await Dp3t.getDeviceName();
 
 ## Testing / Contributing
 
-Read [contributing guidelines](./CONTRIBUTING.md)
-Read [implementation notes][implementation notes]
+- [contributing guidelines](./CONTRIBUTING.md)
+- [implementation notes][implementation notes]
 
 ## License
 
