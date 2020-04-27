@@ -71,3 +71,7 @@ Read [implementation notes](./docs/implementation-notes.md)
 ## License
 
 MIT
+
+## Alternatives
+
+[Wix incubator](https://github.com/wix-incubator/rn-contact-tracing) is building a RN lib from scratch (they don't use DP3T SDK)
