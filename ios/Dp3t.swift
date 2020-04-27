@@ -87,6 +87,7 @@ class Dp3t: RCTEventEmitter, DP3TTracingDelegate {
         }
         
         var healthStatus = ""
+        var matchedContacts: [[String : Any]] = []
         var nativeStatusArg: Int? = nil
         switch state.infectionStatus {
         case .healthy:
@@ -95,15 +96,23 @@ class Dp3t: RCTEventEmitter, DP3TTracingDelegate {
             healthStatus = "infected"
         case let .exposed(days):
             healthStatus = "exposed"
+            matchedContacts = days.map { contact in
+                return [
+                    "id": contact.identifier,
+                    "reportDate": (contact.reportDate.timeIntervalSince1970 * 1000).description
+                ]
+            }
             nativeStatusArg = days.count
         }
         
         var res = [
             "tracingState": tracingState,
+            "numberOfHandshakes": state.numberOfHandshakes,
             "numberOfContacts": state.numberOfContacts,
             "healthStatus": healthStatus,
             "errors": errors,
-            "nativeErrors": nativeErrors
+            "nativeErrors": nativeErrors,
+            "matchedContacts": matchedContacts
         ] as [String : Any]
         if (state.lastSync != nil) {
             res["lastSyncDate"] = (state.lastSync!.timeIntervalSince1970 * 1000).description

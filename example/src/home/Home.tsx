@@ -16,8 +16,10 @@ import {
   HeaderLeft,
   HeaderMiddle,
   HeaderRight,
+  HorizontalContainer,
   ListItem,
   Loading,
+  LongDateWithTime,
   SafeContainer,
   ScrollContainer,
   TouchableRipple,
@@ -154,13 +156,25 @@ export const Home: FunctionComponent = () => {
           </ListItem>
         )}
         {status.healthStatus === 'exposed' && (
-          <ListItem>
-            <Exposed>Exposed</Exposed>
-          </ListItem>
+          <>
+            <ListItem>
+              <Exposed>Exposed</Exposed>
+            </ListItem>
+            {status.matchedContacts.map(({ id, reportDate }, i) => (
+              <HorizontalContainer key={i}>
+                <Column>
+                  <Text>{id}:</Text>
+                </Column>
+                <Column>
+                  <LongDateWithTime date={reportDate} />
+                </Column>
+              </HorizontalContainer>
+            ))}
+          </>
         )}
         {status.healthStatus === 'infected' && (
           <ListItem>
-            <TestedPositive>Was tested positive</TestedPositive>
+            <TestedPositive>Was tested (I Am Infected)</TestedPositive>
           </ListItem>
         )}
         {status.healthStatus !== 'infected' && (
@@ -178,6 +192,9 @@ export const Home: FunctionComponent = () => {
           </ListItem>
         )}
         <Divider />
+        <ListItem>
+          <Text>{status.numberOfHandshakes} handshakes with other phones</Text>
+        </ListItem>
         <ListItem>
           <Text>
             {status.numberOfContacts} contacts with other people (updated on
@@ -220,4 +237,8 @@ const Exposed = styled.Text`
 
 const TestedPositive = styled.Text`
   color: red;
+`;
+
+const Column = styled.View`
+  flex: 1;
 `;

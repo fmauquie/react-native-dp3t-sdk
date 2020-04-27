@@ -72,7 +72,9 @@ type HealthStatus =
    */
   | 'healthy'
   /**
-   * THe phone has made a handshake with another user that was tested positive.
+   * The phone has made a handshake with a contact that was tested positive.
+   *
+   * You will see the list of these contacts in `matchedContacts`
    */
   | 'exposed'
   /**
@@ -89,9 +91,23 @@ interface TracingStatus {
    */
   tracingState: TracingState;
   /**
-   * Number of contacts on other phones.
+   * Number of handshakes.
    *
-   * On Android, this is only updated on sync. Do not consider this information real-time.
+   * This is the number of signals your phone received from other phones.
+   *
+   * You may need to manually refresh the status to see this value change.
+   */
+  numberOfHandshakes: number;
+  /**
+   * Number of contacts.
+   *
+   * This is the number of unique IDs your phone saw.
+   *
+   * This will always be lower than the number of handshakes.
+   *
+   * This is only updated on sync. Do not consider this information real-time.
+   *
+   * As of 2020-04-27 this stays 0 in iOS, no idea why.
    */
   numberOfContacts: number;
   /**
@@ -127,6 +143,12 @@ interface TracingStatus {
    * On iOS, the error can have an argument. It is there. See iOS SDK for details.
    */
   nativeErrorArg?: Object;
+  /**
+   * The contacts that were infected.
+   *
+   * The array always carry a value, but it will only be filled if `healthStatus === 'exposed'`
+   */
+  matchedContacts: { id: number; reportDate: Date }[];
 }
 
 export async function isInitialized(): Promise<boolean> {
@@ -165,6 +187,12 @@ const convertStatus = (platformStatus: any) => ({
   lastSyncDate: platformStatus.lastSyncDate
     ? new Date(parseInt(platformStatus.lastSyncDate, 10))
     : null,
+  matchedContacts: platformStatus.matchedContacts.map(
+    ({ id, reportDate }: { id: number; reportDate: string }) => ({
+      id,
+      reportDate: new Date(parseInt(reportDate, 10)),
+    })
+  ),
 });
 
 export function sendIAmInfected(

@@ -15,6 +15,7 @@ import org.dpppt.android.sdk.TracingStatus
 import org.dpppt.android.sdk.backend.ResponseCallback
 import org.dpppt.android.sdk.backend.models.ApplicationInfo
 import org.dpppt.android.sdk.backend.models.ExposeeAuthMethodAuthorization
+import org.dpppt.android.sdk.internal.database.Database
 import java.util.*
 import kotlin.concurrent.thread
 
@@ -38,13 +39,15 @@ class Dp3tModule(reactContext: ReactApplicationContext) : ReactContextBaseJavaMo
     return constants
   }
 
-  private fun toJSStatus(status: TracingStatus): WritableMap {
+  private fun toJSStatus(context: Context, status: TracingStatus): WritableMap {
     val map = Arguments.createMap()
+    val database = Database(context)
 
     val tracingState = if (status.errors.isNotEmpty()) "error" else if (status.isReceiving) "started" else "stopped"
     val healthStatus = if (status.infectionStatus == InfectionStatus.EXPOSED) "exposed" else if (status.infectionStatus == InfectionStatus.INFECTED) "infected" else "healthy"
 
     map.putString("tracingState", tracingState)
+    map.putInt("numberOfHandshakes", database.handshakes.size)
     map.putInt("numberOfContacts", status.numberOfContacts)
     map.putString("healthStatus", healthStatus)
 
@@ -65,6 +68,16 @@ class Dp3tModule(reactContext: ReactApplicationContext) : ReactContextBaseJavaMo
     }
     map.putArray("errors", errors)
     map.putArray("nativeErrors", nativeErrors)
+
+    val matchedContacts = Arguments.createArray()
+    status.matchedContacts.forEach() {
+      val contact = Arguments.createMap()
+      contact.putInt("id", it.id)
+      contact.putString("reportDate", it.reportDate.toString(10))
+      matchedContacts.pushMap(contact)
+    }
+
+    map.putArray("matchedContacts", matchedContacts)
 
     return map
   }
@@ -126,7 +139,7 @@ class Dp3tModule(reactContext: ReactApplicationContext) : ReactContextBaseJavaMo
         override fun onReceive(context: Context, intent: Intent) {
           reactApplicationContext
             .getJSModule(RCTDeviceEventEmitter::class.java)
-            .emit("Dp3tStatusUpdated", toJSStatus(DP3T.getStatus(reactApplicationContext.applicationContext)))
+            .emit("Dp3tStatusUpdated", toJSStatus(reactApplicationContext.applicationContext, DP3T.getStatus(reactApplicationContext.applicationContext)))
         }
       }, DP3T.getUpdateIntentFilter())
       updateIntentReceiverRegistered = true
@@ -158,7 +171,7 @@ class Dp3tModule(reactContext: ReactApplicationContext) : ReactContextBaseJavaMo
     try {
       val status = DP3T.getStatus(reactApplicationContext.applicationContext)
 
-      promise.resolve(toJSStatus(status))
+      promise.resolve(toJSStatus(reactApplicationContext.applicationContext, status))
     } catch (throwable: Throwable) {
       promise.reject(throwable)
     }
