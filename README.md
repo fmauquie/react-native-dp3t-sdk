@@ -43,7 +43,8 @@ This may only be necessary until the Android SDK uses official Google DP3T suppo
 
 Minimum iOS version is 11 for DP3T iOS SDK, so you need to change the verison to (at least) 11.0 in your iOS Podfile.
 
-You have to add the [react-native-swift](https://github.com/rhdeck/react-native-swift) package and run `react-native swiftify` and run `pod install` again, because this native module (and the DP3T iOS SDK) use Swift.
+If you are not in v0.62, you have to add the [react-native-swift](https://github.com/rhdeck/react-native-swift) package and run `react-native swiftify` and run `pod install` again, because this native module (and the DP3T iOS SDK) use Swift.
+If you are in v0.62 you should be fine just using the module.
 
 [Add bluetooth capabilities](https://github.com/DP-3T/dp3t-sdk-ios#start--stop-tracing) to your Info.plist file.
 
@@ -53,8 +54,6 @@ You have to add `pod 'DP3TSDK', :git => "https://github.com/DP-3T/dp3t-sdk-ios.g
 Replace `COMMIT_ID` with `13c009500dccd1488131a6b0c8ae69247b33a9b0` (latest version supported, watch this file to follow the changes)
 
 This implementation does not yet support requesting the permissions to use Bluetooth in iOS.
-
-iOS SDK does not sync keys automatically. These bindings do not attempt to sync automatically either: you need to call Dp3t.sync() manually.
 
 ## Usage
 

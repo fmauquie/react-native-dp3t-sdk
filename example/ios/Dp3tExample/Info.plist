@@ -6,20 +6,6 @@
 	<array>
 		<string>org.dpppt.synctask</string>
 	</array>
-	<key>UIBackgroundModes</key>
-	<array>
-		<string>fetch</string>
-		<string>bluetooth-central</string>
-		<string>bluetooth-peripheral</string>
-	</array>
-	<key>NSBluetoothAlwaysUsageDescription</key>
-	<string>We need bluetooth to share your anonymized IDs with people around you</string>
-	<key>NSBluetoothPeripheralUsageDescription</key>
-	<string>We need bluetooth to share your anonymized IDs with people around you</string>
-	<key>UIAppFonts</key>
-	<array>
-		<string>MaterialIcons.ttf</string>
-	</array>
 	<key>CFBundleDevelopmentRegion</key>
 	<string>en</string>
 	<key>CFBundleDisplayName</key>
@@ -55,8 +41,22 @@
 			</dict>
 		</dict>
 	</dict>
+	<key>NSBluetoothAlwaysUsageDescription</key>
+	<string>We need bluetooth to share your anonymized IDs with people around you</string>
+	<key>NSBluetoothPeripheralUsageDescription</key>
+	<string>We need bluetooth to share your anonymized IDs with people around you</string>
 	<key>NSLocationWhenInUseUsageDescription</key>
 	<string></string>
+	<key>UIAppFonts</key>
+	<array>
+		<string>MaterialIcons.ttf</string>
+	</array>
+	<key>UIBackgroundModes</key>
+	<array>
+		<string>fetch</string>
+		<string>bluetooth-central</string>
+		<string>bluetooth-peripheral</string>
+	</array>
 	<key>UILaunchStoryboardName</key>
 	<string>LaunchScreen</string>
 	<key>UIRequiredDeviceCapabilities</key>
@@ -66,8 +66,6 @@
 	<key>UISupportedInterfaceOrientations</key>
 	<array>
 		<string>UIInterfaceOrientationPortrait</string>
-		<string>UIInterfaceOrientationLandscapeLeft</string>
-		<string>UIInterfaceOrientationLandscapeRight</string>
 	</array>
 	<key>UIViewControllerBasedStatusBarAppearance</key>
 	<false/>
