@@ -77,14 +77,16 @@ import com.android.build.OutputFile
 
 project.ext.react = [
     entryFile: "index.js",
-    enableHermes: false,  // clean and rebuild if changing
+    enableHermes: true,  // clean and rebuild if changing
 ]
+
+apply from: "../../node_modules/react-native/react.gradle"
 
 project.ext.vectoricons = [
   iconFontNames: [ 'MaterialIcons.ttf' ] // https://github.com/oblador/react-native-vector-icons#option-with-gradle-recommended
 ]
 
-apply from: "../../node_modules/react-native/react.gradle"
+apply from: "../../node_modules/react-native-vector-icons/fonts.gradle"
 
 /**
  * Set this to true to create two separate APKs instead of one:
@@ -194,7 +196,7 @@ dependencies {
         implementation jscFlavor
     }
 
-    compile project(':reactnativedp3t')
+    implementation project(':reactnativedp3t')
 }
 
 // Run this once to be able to run the application with BUCK
