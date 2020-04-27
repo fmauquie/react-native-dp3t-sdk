@@ -10,9 +10,13 @@ The SDKs themselves are in alpha state.
 
 ## Installation
 
+Right now you need to clone it or add it with its Git URL, and build it with `yarn bootstrap`.
+
+<strike>
 ```sh
 npm install react-native-dp3t
 ```
+</strike>
 
 This lib does not work on emulators or simulators, and will crash or burn incomprehensibly. Run on physical devices.
 
