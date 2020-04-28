@@ -16,5 +16,5 @@ Pod::Spec.new do |s|
   s.source_files = "ios/**/*.{h,m,swift}"
 
   s.dependency "React"
-  s.dependency 'DP3TSDK', '0.0.1'
+  s.dependency 'DP3TSDK', '0.0.2'
 end

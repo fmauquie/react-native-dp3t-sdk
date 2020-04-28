@@ -6,7 +6,7 @@ PODS:
   - CocoaAsyncSocket (7.6.4)
   - CocoaLibEvent (1.0.0)
   - DoubleConversion (1.1.6)
-  - DP3TSDK (0.0.1):
+  - DP3TSDK (0.0.2):
     - SQLite.swift (~> 0.12)
     - SwiftJWT (~> 3.5)
     - SwiftProtobuf (~> 1.6)
@@ -246,7 +246,7 @@ PODS:
     - React-jsi (= 0.62.2)
   - React-jsinspector (0.62.2)
   - react-native-dp3t (0.1.0):
-    - DP3TSDK (= 0.0.1)
+    - DP3TSDK (= 0.0.2)
     - React
   - react-native-safe-area-context (0.7.3):
     - React
@@ -329,7 +329,7 @@ PODS:
 
 DEPENDENCIES:
   - DoubleConversion (from `../node_modules/react-native/third-party-podspecs/DoubleConversion.podspec`)
-  - DP3TSDK (from `https://github.com/DP-3T/dp3t-sdk-ios.git`, commit `13c009500dccd1488131a6b0c8ae69247b33a9b0`)
+  - DP3TSDK (from `https://github.com/DP-3T/dp3t-sdk-ios.git`, commit `53a8a68fa4fa655a9159eb2bc2c29384a461fc16`)
   - FBLazyVector (from `../node_modules/react-native/Libraries/FBLazyVector`)
   - FBReactNativeSpec (from `../node_modules/react-native/Libraries/FBReactNativeSpec`)
   - Flipper (~> 0.33.1)
@@ -409,7 +409,7 @@ EXTERNAL SOURCES:
   DoubleConversion:
     :podspec: "../node_modules/react-native/third-party-podspecs/DoubleConversion.podspec"
   DP3TSDK:
-    :commit: 13c009500dccd1488131a6b0c8ae69247b33a9b0
+    :commit: 53a8a68fa4fa655a9159eb2bc2c29384a461fc16
     :git: https://github.com/DP-3T/dp3t-sdk-ios.git
   FBLazyVector:
     :path: "../node_modules/react-native/Libraries/FBLazyVector"
@@ -470,7 +470,7 @@ EXTERNAL SOURCES:
 
 CHECKOUT OPTIONS:
   DP3TSDK:
-    :commit: 13c009500dccd1488131a6b0c8ae69247b33a9b0
+    :commit: 53a8a68fa4fa655a9159eb2bc2c29384a461fc16
     :git: https://github.com/DP-3T/dp3t-sdk-ios.git
 
 SPEC CHECKSUMS:
@@ -481,7 +481,7 @@ SPEC CHECKSUMS:
   CocoaAsyncSocket: 694058e7c0ed05a9e217d1b3c7ded962f4180845
   CocoaLibEvent: 2fab71b8bd46dd33ddb959f7928ec5909f838e3f
   DoubleConversion: 5805e889d232975c086db112ece9ed034df7a0b2
-  DP3TSDK: 981e9c26156b482f6402315c316f96b0d5d3d929
+  DP3TSDK: b398641ec3d1232ba35d79fab6cdbf00b9d2dec5
   FBLazyVector: 4aab18c93cd9546e4bfed752b4084585eca8b245
   FBReactNativeSpec: 5465d51ccfeecb7faa12f9ae0024f2044ce4044e
   Flipper: 6c1f484f9a88d30ab3e272800d53688439e50f69
@@ -506,7 +506,7 @@ SPEC CHECKSUMS:
   React-jsi: b6dc94a6a12ff98e8877287a0b7620d365201161
   React-jsiexecutor: 1540d1c01bb493ae3124ed83351b1b6a155db7da
   React-jsinspector: 512e560d0e985d0e8c479a54a4e5c147a9c83493
-  react-native-dp3t: fa2a6a6c1a61b3e4f9fcf2285fe23d8fa11901fd
+  react-native-dp3t: 1a77957ed2fb16ba97f9b394a7e9702220e7bc38
   react-native-safe-area-context: e200d4433aba6b7e60b52da5f37af11f7a0b0392
   React-RCTActionSheet: f41ea8a811aac770e0cc6e0ad6b270c644ea8b7c
   React-RCTAnimation: 49ab98b1c1ff4445148b72a3d61554138565bad0
@@ -526,6 +526,6 @@ SPEC CHECKSUMS:
   Yoga: 3ebccbdd559724312790e7742142d062476b698e
   YogaKit: f782866e155069a2cca2517aafea43200b01fd5a
 
-PODFILE CHECKSUM: 13cea0a3b1c4453da8c7a916242cebb92e72e2bc
+PODFILE CHECKSUM: 6f012f77ed6ae87c596e06509f44728dd6158fc2
 
 COCOAPODS: 1.9.1

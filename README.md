@@ -51,7 +51,7 @@ If you are in v0.62 you should be fine just using the module.
 [Add background fetch configuration](https://github.com/DP-3T/dp3t-sdk-ios#background-tasks) to your Info.plist file.
 
 You have to add `pod 'DP3TSDK', :git => "https://github.com/DP-3T/dp3t-sdk-ios.git", :commit => 'COMMIT_ID''` in your Podfile until the SDK stabilizes, and a version is pushed on the Pods repo.
-Replace `COMMIT_ID` with `13c009500dccd1488131a6b0c8ae69247b33a9b0` (latest version supported, watch this file to follow the changes)
+Replace `COMMIT_ID` with `53a8a68fa4fa655a9159eb2bc2c29384a461fc16` (latest version supported, watch this file to follow the changes)
 
 This implementation does not yet support requesting the permissions to use Bluetooth in iOS.
 

@@ -72,16 +72,11 @@ class Dp3t: RCTEventEmitter, DP3TTracingDelegate {
             case let .networkingError(netError):
                 nativeErrorArg = netError
                 errors.append("sync")
-            case let .timeInconsistency(shift):
-                nativeErrorArg = String(format: "%d", shift)
-                errors.append("sync")
             case let .cryptographyError(cError):
                 nativeErrorArg = cError
                 errors.append("other")
             case let .databaseError(dError):
                 nativeErrorArg = dError
-                errors.append("other")
-            case .jwtSignitureError:
                 errors.append("other")
             }
         }
