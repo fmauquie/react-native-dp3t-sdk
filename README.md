@@ -14,7 +14,7 @@ This project is bootstraped from [bob][bob], see [implementation notes][implemen
 ## Installation
 
 ```sh
-yarn add react-native-dp3t-sdk
+yarn add react-native-dp3t-sdk@alpha
 ```
 
 This lib does not work on emulators or simulators, because Bluetooth. Run on physical devices.
