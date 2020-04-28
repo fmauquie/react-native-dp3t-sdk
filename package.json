@@ -7,11 +7,15 @@
   "types": "lib/typescript/src/index.d.ts",
   "react-native": "src/index.tsx",
   "files": [
-    "src",
-    "lib",
-    "android",
-    "ios",
-    "react-native-dp3t-sdk.podspec"
+    "/src",
+    "/lib",
+    "/android/src",
+    "/android/build.gradle",
+    "/android/gradle.properties",
+    "/ios",
+    "/react-native-dp3t-sdk.podspec",
+    "!xcuserdata",
+    "!example"
   ],
   "scripts": {
     "test": "jest",
