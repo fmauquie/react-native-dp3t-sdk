@@ -21,7 +21,10 @@ npm install react-native-dp3t
 ```
 </strike>
 
-This lib does not work on emulators or simulators, and will crash or burn incomprehensibly. Run on physical devices.
+This lib does not work on emulators or simulators, because Bluetooth. Run on physical devices.
+
+If you use Fiber to display the Android SDK database, note that the ephID column is always blank.
+This is because ephIDs are encrypted BLOBs, they are _not_ missing.
 
 ## Necessary manual Android setup
 
