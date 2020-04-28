@@ -77,7 +77,7 @@ target 'Dp3tExample' do
   pod 'glog', :podspec => '../node_modules/react-native/third-party-podspecs/glog.podspec'
   pod 'Folly', :podspec => '../node_modules/react-native/third-party-podspecs/Folly.podspec'
 
-  pod 'react-native-dp3t', :path => '../..'
+  pod 'react-native-dp3t-sdk', :path => '../..'
 
   pod 'DP3TSDK', :git => "https://github.com/DP-3T/dp3t-sdk-ios.git", :commit => '53a8a68fa4fa655a9159eb2bc2c29384a461fc16'
 

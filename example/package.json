@@ -1,6 +1,6 @@
 {
-  "name": "react-native-dp3t-example",
-  "description": "Example app for react-native-dp3t",
+  "name": "react-native-dp3t-sdk-example",
+  "description": "Example app for react-native-dp3t-sdk",
   "version": "0.0.1",
   "private": true,
   "scripts": {

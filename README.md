@@ -1,6 +1,6 @@
-# react-native-dp3t
+# react-native-dp3t-sdk
 
-DP3T bindings for React Native.
+DP3T SDK bindings for React Native.
 
 ## Status
 
@@ -61,7 +61,7 @@ This implementation does not yet support requesting the permissions to use Bluet
 ## Usage
 
 ```js
-import Dp3t from 'react-native-dp3t';
+import Dp3t from 'react-native-dp3t-sdk';
 
 // ...
 

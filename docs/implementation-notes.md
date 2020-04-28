@@ -1,4 +1,4 @@
-# react-native-dp3t implementation notes
+# react-native-dp3t-sdk implementation notes
 
 Native module is based on [bob](https://github.com/react-native-community/bob) and accepts all choices it made.
 

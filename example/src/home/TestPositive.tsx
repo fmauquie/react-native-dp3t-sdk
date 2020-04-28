@@ -1,7 +1,7 @@
 import { format, parse } from 'date-fns';
 import React, { FunctionComponent, useCallback, useState } from 'react';
 import { Button, Text } from 'react-native';
-import { sendIAmInfected } from 'react-native-dp3t';
+import { sendIAmInfected } from 'react-native-dp3t-sdk';
 import Icon from 'react-native-vector-icons/MaterialIcons';
 import { useHistory } from 'react-router';
 import {

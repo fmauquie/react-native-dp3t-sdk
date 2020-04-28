@@ -6,7 +6,7 @@ import {
   stop,
   sync,
   useDp3tStatus,
-} from 'react-native-dp3t';
+} from 'react-native-dp3t-sdk';
 import Icon from 'react-native-vector-icons/MaterialIcons';
 import { Link } from 'react-router-native';
 import styled from 'styled-components/native';

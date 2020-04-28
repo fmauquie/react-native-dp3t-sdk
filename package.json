@@ -1,6 +1,6 @@
 {
-  "name": "react-native-dp3t",
-  "version": "0.1.0",
+  "name": "react-native-dp3t-sdk",
+  "version": "0.1.0-alpha.0",
   "description": "DP3T native bindings for React Native",
   "main": "lib/commonjs/index.js",
   "module": "lib/module/index.js",
@@ -11,7 +11,7 @@
     "lib",
     "android",
     "ios",
-    "react-native-dp3t.podspec"
+    "react-native-dp3t-sdk.podspec"
   ],
   "scripts": {
     "test": "jest",
@@ -25,16 +25,17 @@
   },
   "keywords": [
     "react-native",
+    "dp3t",
     "ios",
     "android"
   ],
-  "repository": "https://github.com/fmauquie/react-native-dp3t",
+  "repository": "https://github.com/fmauquie/react-native-dp3t-sdk",
   "author": "fmauquie <fabien.mauquie@gmail.com> (https://github.com/fmauquie)",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/fmauquie/react-native-dp3t/issues"
+    "url": "https://github.com/fmauquie/react-native-dp3t-sdk/issues"
   },
-  "homepage": "https://github.com/fmauquie/react-native-dp3t#readme",
+  "homepage": "https://github.com/fmauquie/react-native-dp3t-sdk#readme",
   "devDependencies": {
     "@commitlint/config-conventional": "^8.3.4",
     "@react-native-community/bob": "^0.10.1",

@@ -2,5 +2,5 @@ rootProject.name = 'Dp3tExample'
 apply from: file("../node_modules/@react-native-community/cli-platform-android/native_modules.gradle"); applyNativeModulesSettingsGradle(settings)
 include ':app'
 
-include ':reactnativedp3t'
-project(':reactnativedp3t').projectDir = new File(rootProject.projectDir, '../../android')
+include ':reactnativedp3tsdk'
+project(':reactnativedp3tsdk').projectDir = new File(rootProject.projectDir, '../../android')

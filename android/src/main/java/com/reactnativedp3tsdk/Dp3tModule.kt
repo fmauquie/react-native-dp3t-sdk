@@ -1,4 +1,4 @@
-package com.reactnativedp3t
+package com.reactnativedp3tsdk
 
 import android.annotation.SuppressLint
 import android.content.BroadcastReceiver

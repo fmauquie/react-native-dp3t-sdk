@@ -1,6 +1,6 @@
 import React, { FunctionComponent, useCallback, useState } from 'react';
 import { Button, Text } from 'react-native';
-import { initManually, initWithDiscovery } from 'react-native-dp3t';
+import { initManually, initWithDiscovery } from 'react-native-dp3t-sdk';
 import Icon from 'react-native-vector-icons/MaterialIcons';
 import { useHistory } from 'react-router';
 import {

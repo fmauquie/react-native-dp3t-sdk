@@ -1,4 +1,4 @@
-package com.reactnativedp3t.example;
+package com.reactnativedp3tsdk.example;
 
 import com.facebook.react.ReactActivity;
 
