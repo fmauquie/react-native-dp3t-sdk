@@ -13,13 +13,9 @@ This project is bootstraped from [bob][bob], see [implementation notes][implemen
 
 ## Installation
 
-Right now you need to clone it or add it with its Git URL, and build it with `yarn bootstrap`.
-
-<strike>
 ```sh
-npm install react-native-dp3t
+yarn add react-native-dp3t-sdk
 ```
-</strike>
 
 This lib does not work on emulators or simulators, because Bluetooth. Run on physical devices.
 
