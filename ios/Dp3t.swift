@@ -222,7 +222,7 @@ class Dp3t: RCTEventEmitter, DP3TTracingDelegate {
         DP3TTracing.sync { result in
             switch result {
             case .success:
-                resolve(nil)
+                resolve(true)
             case let .failure(error):
                 print(error)
                 reject("DP3TError", "Failed to sync", error)

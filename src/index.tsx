@@ -13,6 +13,8 @@ const dp3tEmitter = new NativeEventEmitter(Dp3t);
 
 /**
  * Name of the event that is sent when tracing status changes.
+ *
+ * Do not use it directly, use `addStatusUpdatedListener()` as there are Date conversions to do.
  */
 export const Dp3tStatusUpdated: string = Dp3t.Dp3tStatusUpdated;
 
@@ -21,7 +23,7 @@ export const Dp3tStatusUpdated: string = Dp3t.Dp3tStatusUpdated;
  */
 type Dp3TError =
   /**
-   * Other error (check nativeError for more information)
+   * Other error (check nativeErrors for more information)
    *
    * Only in iOS
    */
@@ -36,11 +38,11 @@ type Dp3TError =
    * On iOS this is bluetooth permission,
    * on Android this is both location permission and battery optimization disabling.
    *
-   * Call requestPermissions() to fix.
+   * Call requestPermissions() to fix for Android, display an error in iOS.
    */
   | 'permissionMissing'
   /**
-   * Error while syncing. See nativeError for more information.
+   * Error while syncing. See nativeErrors for more information.
    */
   | 'sync';
 
@@ -49,7 +51,7 @@ type Dp3TError =
  */
 type TracingState =
   /**
-   * SDK is exchanging keys with people around
+   * SDK is exchanging EphIDs with people around
    */
   | 'started'
   /**
@@ -58,6 +60,8 @@ type TracingState =
   | 'stopped'
   /**
    * SDK is not started, and there are errors that prevent SDK from starting
+   *
+   * See `errors` attribute from `TracingStatus`
    */
   | 'error';
 
@@ -121,8 +125,6 @@ interface TracingStatus {
   /**
    * Last time the SDK synced with the backend server.
    *
-   * In iOS the sync is _not_ automatic.
-   *
    * `null` if never synced
    */
   lastSyncDate: Date | null;
@@ -151,17 +153,41 @@ interface TracingStatus {
   matchedContacts: { id: number; reportDate: Date }[];
 }
 
+/**
+ * Is the SDK initialized ?
+ *
+ * Use this to know if you can call the main methods or if you need to call the `init*` methods first.
+ *
+ * Resolves promise with `true` when the SDK is initialized
+ */
 export async function isInitialized(): Promise<boolean> {
   return Dp3t.isInitialized();
 }
 
+/**
+ * Initialize the SDK with the GitHub discovery service.
+ *
+ * The discovery service is a JSON file on GitHub:
+ * - for production: https://github.com/DP-3T/dp3t-discovery/blob/master/discovery.json
+ * - for dev: https://github.com/DP-3T/dp3t-discovery/blob/master/discovery_dev.json
+ *
+ * @param backendAppId The `appId` in the discovery service
+ * @param dev Should use the dev or production service ?
+ */
 export function initWithDiscovery(
   backendAppId: string,
-  dev: boolean
+  dev = false
 ): Promise<void> {
   return Dp3t.initWithDiscovery(backendAppId, dev);
 }
 
+/**
+ * Initialize the SDK by passing the backend URLs.
+ *
+ * @param backendAppId Unique ID for the backend, used internally by the SDK to reset the sync caches when it changes (I think)
+ * @param reportBaseUrl Report URL for the backend (should be provided by your backend provider)
+ * @param bucketBaseUrl Bucket URL for the backend (should be provided by your backend provider)
+ */
 export function initManually(
   backendAppId: string,
   reportBaseUrl: string,
@@ -170,14 +196,33 @@ export function initManually(
   return Dp3t.initManually(backendAppId, reportBaseUrl, bucketBaseUrl);
 }
 
+/**
+ * Start tracing.
+ *
+ * The phone will start advertising EphIDs with Bluetooth.
+ *
+ * The phone will start listening to EphIDs from other devices.
+ *
+ * This will only work if all Bluetooth and permission errors have been managed (see TracingStatus.errors)
+ */
 export function start(): Promise<void> {
   return Dp3t.start();
 }
 
+/**
+ * Stop tracing.
+ *
+ * This will stop advertising EphIDs and stop collecting them.
+ */
 export function stop(): Promise<void> {
   return Dp3t.stop();
 }
 
+/**
+ * Fetch the status of the SDK.
+ *
+ * This will throw an error if the SDK has not been initialized.
+ */
 export async function currentTracingStatus(): Promise<TracingStatus> {
   return convertStatus(await Dp3t.currentTracingStatus());
 }
@@ -195,6 +240,17 @@ const convertStatus = (platformStatus: any) => ({
   ),
 });
 
+/**
+ * Report the user as infected.
+ *
+ * Use this when the user has been tested positive to the virus.
+ *
+ * ALPHA WARNING there are 2 ways in the SDKs to send the authentication code.
+ * This implementation assumes HTTP auth method until more info is known.
+ *
+ * @param onset The date when the user was tested positive
+ * @param authString The code given by the physician to the user for authentication.
+ */
 export function sendIAmInfected(
   onset: Date,
   authString: string
@@ -208,14 +264,41 @@ export function sendIAmInfected(
   );
 }
 
+/**
+ * Force a sync.
+ *
+ * The SDKs sync the known cases periodically. You can force a sync now.
+ *
+ * Resolves promise with `true` if the sync was forced, `false` if a sync was already in progress.
+ */
 export function sync(): Promise<boolean> {
   return Dp3t.sync();
 }
 
+/**
+ * Clear all data and reset the service.
+ *
+ * You will need to call init* method again.
+ */
 export function clearData(): Promise<void> {
   return Dp3t.clearData();
 }
 
+/**
+ * Listen to status changes.
+ *
+ * You certainly should use `useDp3tStatus()` instead.
+ *
+ * Do not ever forget to unregister the listener on unmount with subscription.remove():
+ * ```js
+ * useEffect(() => {
+ *   const subscription = await addStatusUpdatedListener(setStatus);
+ *   return () => subscription.remove();
+ * }, [])
+ * ```
+ *
+ * @param listener The listener will be called on each status change with the new status.
+ */
 export function addStatusUpdatedListener(
   listener: (status: TracingStatus) => any
 ): EmitterSubscription {
@@ -224,6 +307,21 @@ export function addStatusUpdatedListener(
   );
 }
 
+/**
+ * Requests missing permissions.
+ *
+ * This only does something on Android.
+ * On iOS the permissions are requested by the SDK for us.
+ *
+ * This is still important to monitor the permission error on iOS:
+ * if the user refuses to grant them we need to show them a nice message with some explanations.
+ *
+ * Resolves the promise with a PermissionStatus on Android (this is a string: 'granted' | 'denied' | 'never_ask_again')
+ *
+ * Resolves the promise with 'ios' on iOS
+ *
+ * @param rationale The texts to show on some Android devices (on iOS they go in Infos.plist, check README.md).
+ */
 export async function requestPermissions(rationale?: Rationale) {
   if (Platform.OS === 'android') {
     await Dp3t.checkBatteryOptimizationDeactivated();
@@ -232,20 +330,30 @@ export async function requestPermissions(rationale?: Rationale) {
       rationale
     );
   }
-  return undefined;
+  return 'ios';
 }
 
 /**
  * Listens to the status of the DP3T service.
  *
- * @return `null`: The status is loading, `false` The service is not initialized, the status otherwise.
- *   If `false` you need to initialize the service with one of the init* methods.
+ * Usage:
+ * ```js
+ * const [status, refreshStatus] = useDp3tStatus();
+ * ```
+ *
+ * `status` is:
+ * - `null` if the status is loading from the SDK (briefly on mount)
+ * - `false` if the SDK is not initialized (call init*() methods)
+ * - the TracingStatus in normal operation
+ *
+ * `refreshStatus` is a function you can call to force a status refresh from the SDK.
+ * You usually do not need to use it (the SDKs are pretty good at keeping this up-to-date),
+ * but it is useful in the following situations:
+ * - You just called `requestPermissions()` (the status will not update on permissions grant)
+ * - To give the user a way to make sure the status is the lastest available
  */
-export function useDp3tStatus(): [
-  null | false | Error | TracingStatus,
-  () => void
-] {
-  const [initialized, setInitialized] = useState(false);
+export function useDp3tStatus(): [null | false | TracingStatus, () => void] {
+  const [initialized, setInitialized] = useState<boolean | null>(null);
   const [status, setStatus] = useState<TracingStatus | null>(null);
 
   useEffect(function checkInitialized() {
@@ -256,7 +364,7 @@ export function useDp3tStatus(): [
     function refreshStatus() {
       if (initialized) {
         setStatus(null);
-        currentTracingStatus().then(setStatus, setStatus);
+        currentTracingStatus().then(setStatus);
       }
     },
     [initialized]
