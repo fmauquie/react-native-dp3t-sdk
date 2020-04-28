@@ -1,6 +1,6 @@
 {
   "name": "react-native-dp3t-sdk",
-  "version": "0.0.0",
+  "version": "0.1.0-alpha.0",
   "description": "DP3T native bindings for React Native",
   "main": "lib/commonjs/index.js",
   "module": "lib/module/index.js",
@@ -90,7 +90,10 @@
       ]
     }
   },
-  "eslintIgnore": ["node_modules/", "lib/"],
+  "eslintIgnore": [
+    "node_modules/",
+    "lib/"
+  ],
   "prettier": {
     "singleQuote": true,
     "tabWidth": 2,
@@ -117,6 +120,10 @@
   "@react-native-community/bob": {
     "source": "src",
     "output": "lib",
-    "targets": ["commonjs", "module", "typescript"]
+    "targets": [
+      "commonjs",
+      "module",
+      "typescript"
+    ]
   }
 }
