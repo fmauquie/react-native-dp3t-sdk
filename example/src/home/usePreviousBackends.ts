@@ -1,4 +1,4 @@
-import { useAsyncStorage } from '@react-native-community/async-storage';
+import AsyncStorage from '@react-native-community/async-storage';
 import { useCallback, useEffect, useMemo, useState } from 'react';
 
 export type Backend =
@@ -14,22 +14,20 @@ export type Backend =
       dev: boolean;
     };
 
+const PREVIOUS_BACKENDS_KEY = 'PREVIOUS_BACKENDS';
+
 export function usePreviousBackends(): [
   Backend[] | Error,
   (backend: Backend) => Promise<void>
 ] {
-  const { getItem, setItem } = useAsyncStorage('PREVIOUS_BACKENDS');
   const [previousBackends, setPreviousBackends] = useState<Backend[]>([]);
   const [error, setError] = useState<Error | null>(null);
 
-  useEffect(
-    function loadPreviousBackends() {
-      getItem()
-        .then(res => setPreviousBackends(res ? JSON.parse(res) : []))
-        .catch(setError);
-    },
-    [getItem]
-  );
+  useEffect(function loadPreviousBackends() {
+    AsyncStorage.getItem(PREVIOUS_BACKENDS_KEY)
+      .then(res => setPreviousBackends(res ? JSON.parse(res) : []))
+      .catch(setError);
+  }, []);
 
   const addBackend = useCallback(
     async function addBackend(backend) {
@@ -42,9 +40,12 @@ export function usePreviousBackends(): [
         ),
       ];
       setPreviousBackends(backends);
-      await setItem(JSON.stringify(backends));
+      await AsyncStorage.setItem(
+        PREVIOUS_BACKENDS_KEY,
+        JSON.stringify(backends)
+      );
     },
-    [previousBackends, setItem]
+    [previousBackends]
   );
 
   return useMemo(() => [error ?? previousBackends, addBackend], [
