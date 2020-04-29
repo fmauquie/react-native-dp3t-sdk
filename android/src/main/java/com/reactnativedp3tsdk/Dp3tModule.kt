@@ -62,7 +62,7 @@ class Dp3tModule(reactContext: ReactApplicationContext) : ReactContextBaseJavaMo
       when (it) {
         TracingStatus.ErrorState.BLE_DISABLED -> errors.pushString("bluetoothDisabled")
         TracingStatus.ErrorState.MISSING_LOCATION_PERMISSION, TracingStatus.ErrorState.BATTERY_OPTIMIZER_ENABLED -> errors.pushString("permissionMissing")
-        TracingStatus.ErrorState.NETWORK_ERROR_WHILE_SYNCING -> errors.pushString("sync")
+        TracingStatus.ErrorState.SYNC_ERROR_SERVER, TracingStatus.ErrorState.SYNC_ERROR_NETWORK, TracingStatus.ErrorState.SYNC_ERROR_TIMING, TracingStatus.ErrorState.SYNC_ERROR_DATABASE, TracingStatus.ErrorState.SYNC_ERROR_SIGNATURE -> errors.pushString("sync")
         else -> errors.pushString("other")
       }
     }
@@ -70,10 +70,10 @@ class Dp3tModule(reactContext: ReactApplicationContext) : ReactContextBaseJavaMo
     map.putArray("nativeErrors", nativeErrors)
 
     val matchedContacts = Arguments.createArray()
-    status.matchedContacts.forEach() {
+    database.allMatchedContacts.forEach() {
       val contact = Arguments.createMap()
       contact.putInt("id", it.id)
-      contact.putString("reportDate", it.reportDate.toString(10))
+      contact.putString("reportDate", it.date.toString(10))
       matchedContacts.pushMap(contact)
     }
 

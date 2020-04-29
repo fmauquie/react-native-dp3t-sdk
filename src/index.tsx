@@ -100,6 +100,8 @@ interface TracingStatus {
    * This is the number of signals your phone received from other phones.
    *
    * You may need to manually refresh the status to see this value change.
+   *
+   * THIS IS DEBUG DATA and it will be removed in beta (Android removed it in 0.1.9)
    */
   numberOfHandshakes: number;
   /**
@@ -149,6 +151,8 @@ interface TracingStatus {
    * The contacts that were infected.
    *
    * The array always carry a value, but it will only be filled if `healthStatus === 'exposed'`
+   *
+   * THIS IS DEBUG DATA and it will be removed in beta (Android removed it in 0.1.12)
    */
   matchedContacts: { id: number; reportDate: Date }[];
 }
