@@ -70,6 +70,8 @@ class Dp3t: RCTEventEmitter, DP3TTracingDelegate {
             case let .databaseError(dError):
                 nativeErrorArg = dError
                 errors.append("other")
+            case .userAlreadyMarkedAsInfected:
+                errors.append("other")
             }
         }
         
