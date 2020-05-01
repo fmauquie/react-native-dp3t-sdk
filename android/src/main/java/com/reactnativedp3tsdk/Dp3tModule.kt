@@ -92,7 +92,7 @@ class Dp3tModule(reactContext: ReactApplicationContext) : ReactContextBaseJavaMo
   fun initWithDiscovery(backendAppId: String, dev: Boolean, promise: Promise) {
     try {
       registerUpdateIntentReceiver()
-      DP3T.init(reactApplicationContext.applicationContext, backendAppId, dev)
+      DP3T.init(reactApplicationContext.applicationContext, backendAppId, dev, null)
 
       initialized = true
       promise.resolve(null)
@@ -105,7 +105,7 @@ class Dp3tModule(reactContext: ReactApplicationContext) : ReactContextBaseJavaMo
   fun initManually(backendAppId: String, reportBaseUrl: String, bucketBaseUrl: String, promise: Promise) {
     try {
       registerUpdateIntentReceiver()
-      DP3T.init(reactApplicationContext.applicationContext, ApplicationInfo(backendAppId, reportBaseUrl, bucketBaseUrl))
+      DP3T.init(reactApplicationContext.applicationContext, ApplicationInfo(backendAppId, reportBaseUrl, bucketBaseUrl), null)
 
       initialized = true
       promise.resolve(null)
