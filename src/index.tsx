@@ -262,18 +262,19 @@ const convertStatus = (platformStatus: any) => ({
  * This implementation assumes HTTP auth method until more info is known.
  *
  * @param onset The date when the user was tested positive
- * @param authString The code given by the physician to the user for authentication.
+ * @param auth The code given by the doctor to the user for authentication,
+ *             passed depending on how the server operates.
  */
 export function sendIAmInfected(
   onset: Date,
-  authString: string
+  auth: { authorization: string } | { json: string }
 ): Promise<void> {
   return Dp3t.sendIAmInfected(
     Platform.select({
       ios: onset.toISOString(),
       android: '' + onset.getTime() / 1000,
     }),
-    authString
+    auth
   );
 }
 

@@ -15,6 +15,7 @@ import org.dpppt.android.sdk.TracingStatus
 import org.dpppt.android.sdk.backend.ResponseCallback
 import org.dpppt.android.sdk.backend.models.ApplicationInfo
 import org.dpppt.android.sdk.backend.models.ExposeeAuthMethodAuthorization
+import org.dpppt.android.sdk.backend.models.ExposeeAuthMethodJson
 import org.dpppt.android.sdk.internal.database.Database
 import org.dpppt.android.sdk.util.SignatureUtil
 import java.util.*
@@ -179,12 +180,18 @@ class Dp3tModule(reactContext: ReactApplicationContext) : ReactContextBaseJavaMo
   }
 
   @ReactMethod
-  fun sendIAmInfected(timestamp: String, authString: String, promise: Promise) {
+  fun sendIAmInfected(timestamp: String, auth: ReadableMap, promise: Promise) {
     try {
       val timestampLong = timestamp.toLong(10);
       val date = Date(timestampLong)
 
-      DP3T.sendIAmInfected(reactApplicationContext, date, ExposeeAuthMethodAuthorization(authString), object : ResponseCallback<Void?> {
+      val exposeeAuth = when {
+          auth.hasKey("authorization") -> ExposeeAuthMethodAuthorization(auth.getString("authorization"))
+          auth.hasKey("json") -> ExposeeAuthMethodJson(auth.getString("json"))
+          else -> throw IllegalArgumentException("Bad auth method")
+      }
+
+      DP3T.sendIAmInfected(reactApplicationContext, date, exposeeAuth, object : ResponseCallback<Void?> {
         override fun onSuccess(response: Void?) {
           promise.resolve(null)
         }

@@ -26,6 +26,9 @@ export const TestPositive: FunctionComponent = () => {
 
   const [onset, setOnset] = useState<string>(format(new Date(), 'yyyy-MM-dd'));
   const [authString, setAuthString] = useState<string>('');
+  const [authMode, setAuthMode] = useState<'authorization' | 'json'>(
+    'authorization'
+  );
 
   const [error, setError] = useState<Error | null>(null);
 
@@ -39,13 +42,22 @@ export const TestPositive: FunctionComponent = () => {
         if (isNaN(onsetDate.getTime())) {
           throw new Error('Invalid onset date');
         }
-        await sendIAmInfected(new Date(onset), authString);
+        const auth =
+          authMode === 'authorization'
+            ? { authorization: authString }
+            : authMode === 'json'
+            ? { json: authString }
+            : null;
+        if (!auth) {
+          throw new Error('Invalid auth mode');
+        }
+        await sendIAmInfected(new Date(onset), auth);
         goRoot(history, '/home');
       } catch (e) {
         setError(e);
       }
     },
-    [onset, authString, history]
+    [onset, authString, authMode, history]
   );
 
   if (error) {
@@ -128,6 +140,19 @@ export const TestPositive: FunctionComponent = () => {
             <InputContainer>
               <InputLabel>Auth code:</InputLabel>
               <StyledInput value={authString} onChangeText={setAuthString} />
+            </InputContainer>
+            <InputContainer>
+              <InputLabel>Auth mode:</InputLabel>
+              <Button
+                onPress={() => setAuthMode('authorization')}
+                title="HTTP auth header"
+                color={authMode === 'authorization' ? 'black' : 'grey'}
+              />
+              <Button
+                onPress={() => setAuthMode('json')}
+                title="JSON payload"
+                color={authMode === 'json' ? 'black' : 'grey'}
+              />
             </InputContainer>
             <Button onPress={send} title="Send" />
           </ListItem>

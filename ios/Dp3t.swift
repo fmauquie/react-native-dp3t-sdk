@@ -193,13 +193,24 @@ class Dp3t: RCTEventEmitter, DP3TTracingDelegate {
     }
     
     @objc
-    func sendIAmInfected(_ onset: Date, authString: String, resolve: @escaping RCTPromiseResolveBlock, reject: @escaping RCTPromiseRejectBlock) {
+    func sendIAmInfected(_ onset: Date, auth: Dictionary<String, String>, resolve: @escaping RCTPromiseResolveBlock, reject: @escaping RCTPromiseRejectBlock) {
         guard DP3TTracing.isInitialized else {
             reject("DP3TNotInitialized", "DP3T was not initialized.", nil)
             return
         }
         
-        DP3TTracing.iWasExposed(onset: onset, authentication: .HTTPAuthorizationBearer(token: authString)) { result in
+        let authentication = auth["authorization"] != nil
+            ? ExposeeAuthMethod.HTTPAuthorizationBearer(token: auth["authorization"]!)
+            : auth["json"] != nil
+            ? ExposeeAuthMethod.JSONPayload(token: auth["json"]!)
+            : nil
+        
+        guard authentication != nil else {
+            reject("DP3TError", "Bad auth type", nil)
+            return
+        }
+        
+        DP3TTracing.iWasExposed(onset: onset, authentication: authentication!) { result in
             switch result {
             case .success:
                 resolve(nil)

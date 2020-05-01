@@ -133,7 +133,7 @@ Resolves the promise with the current `TracingStatus` (see below)
 
 This will throw an error if the SDK has not been initialized.
 
-#### sendIAmInfected(onset: Date, authString: string): Promise&lt;void>
+#### sendIAmInfected(onset: Date, auth: { authorization: string } | { json: string }): Promise&lt;void>
 
 Report the user as infected.
 
@@ -142,8 +142,11 @@ Use this when the user has been tested positive to the virus.
 ALPHA WARNING there are 2 ways in the SDKs to send the authentication code.
 This implementation assumes HTTP auth method until more info is known.
 
-- `onset` The date when the user was tested positive
-- `authString` The code given by the physician to the user for authentication.
+- `onset`: The date when the user was tested positive
+- `auth`: The code given by the doctor to the user for authentication,
+  passed depending on how the server operates.
+  Pass `{ autorization: '<code>' }` to use a HTTP authorization header,
+  pass `{ json: '<code>' }` to use a JSON payload.
 
 #### sync(): Promise&lt;boolean>
 

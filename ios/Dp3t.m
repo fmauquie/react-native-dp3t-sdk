@@ -42,7 +42,7 @@ RCT_EXTERN_METHOD(
 
 RCT_EXTERN_METHOD(
                   sendIAmInfected: (NSDate)onset
-                  authString: (NSString)authString
+                  auth: (NSDictionary)auth
                   resolve: (RCTPromiseResolveBlock)resolve
                   reject: (RCTPromiseRejectBlock)reject
                   )
