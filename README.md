@@ -48,7 +48,7 @@ If you are in v0.62 you should be fine just using the module.
 
 [Add background fetch configuration](https://github.com/DP-3T/dp3t-sdk-ios#background-tasks) to your Info.plist file.
 
-Until we have a way of initializing the background sync manager on iOS, you need to ass this line to your Podfile:
+Until we have a way of initializing the background sync manager on iOS, you need to add this line to your Podfile:
 ```
 pod 'DP3TSDK', :git => "https://github.com/fmauquie/dp3t-sdk-ios.git", :branch => 'develop'
 ```
