@@ -16,6 +16,7 @@ import org.dpppt.android.sdk.backend.ResponseCallback
 import org.dpppt.android.sdk.backend.models.ApplicationInfo
 import org.dpppt.android.sdk.backend.models.ExposeeAuthMethodAuthorization
 import org.dpppt.android.sdk.internal.database.Database
+import org.dpppt.android.sdk.util.SignatureUtil
 import java.util.*
 import kotlin.concurrent.thread
 
@@ -43,7 +44,7 @@ class Dp3tModule(reactContext: ReactApplicationContext) : ReactContextBaseJavaMo
     val map = Arguments.createMap()
     val database = Database(context)
 
-    val tracingState = if (status.errors.isNotEmpty()) "error" else if (status.isReceiving) "started" else "stopped"
+    val tracingState = if (status.isReceiving) "started" else if (status.errors.isNotEmpty()) "error" else "stopped"
     val healthStatus = if (status.infectionStatus == InfectionStatus.EXPOSED) "exposed" else if (status.infectionStatus == InfectionStatus.INFECTED) "infected" else "healthy"
 
     map.putString("tracingState", tracingState)
@@ -89,10 +90,10 @@ class Dp3tModule(reactContext: ReactApplicationContext) : ReactContextBaseJavaMo
   }
 
   @ReactMethod
-  fun initWithDiscovery(backendAppId: String, dev: Boolean, promise: Promise) {
+  fun initWithDiscovery(backendAppId: String, publicKeyBase64: String, dev: Boolean, promise: Promise) {
     try {
       registerUpdateIntentReceiver()
-      DP3T.init(reactApplicationContext.applicationContext, backendAppId, dev, null)
+      DP3T.init(reactApplicationContext.applicationContext, backendAppId, dev, SignatureUtil.getPublicKeyFromBase64(publicKeyBase64))
 
       initialized = true
       promise.resolve(null)
@@ -102,10 +103,10 @@ class Dp3tModule(reactContext: ReactApplicationContext) : ReactContextBaseJavaMo
   }
 
   @ReactMethod
-  fun initManually(backendAppId: String, reportBaseUrl: String, bucketBaseUrl: String, promise: Promise) {
+  fun initManually(backendAppId: String, reportBaseUrl: String, bucketBaseUrl: String, publicKeyBase64: String, promise: Promise) {
     try {
       registerUpdateIntentReceiver()
-      DP3T.init(reactApplicationContext.applicationContext, ApplicationInfo(backendAppId, reportBaseUrl, bucketBaseUrl), null)
+      DP3T.init(reactApplicationContext.applicationContext, ApplicationInfo(backendAppId, reportBaseUrl, bucketBaseUrl), SignatureUtil.getPublicKeyFromBase64(publicKeyBase64))
 
       initialized = true
       promise.resolve(null)

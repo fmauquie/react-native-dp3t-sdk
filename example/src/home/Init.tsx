@@ -28,6 +28,7 @@ export const Init: FunctionComponent = () => {
   const [manualBackendAppId, setManualBackendAppId] = useState('');
   const [manualReportBaseUrl, setManualReportBaseUrl] = useState('');
   const [manualBucketBaseUrl, setManualBucketBaseUrl] = useState('');
+  const [manualPublicKeyBase64, setManualPublicKeyBase64] = useState('');
 
   const connectBackend = useCallback(
     async function connectBackend(backend: Backend) {
@@ -36,10 +37,15 @@ export const Init: FunctionComponent = () => {
           await initManually(
             backend.backendAppId,
             backend.backendBaseUrl,
-            backend.bucketBaseUrl
+            backend.bucketBaseUrl,
+            backend.publicKeyBase64
           );
         } else {
-          await initWithDiscovery(backend.backendAppId, false);
+          await initWithDiscovery(
+            backend.backendAppId,
+            backend.publicKeyBase64,
+            backend.dev
+          );
         }
         await addBackend(backend);
         goRoot(history, '/home');
@@ -114,6 +120,10 @@ export const Init: FunctionComponent = () => {
             connectBackend({
               type: 'discover',
               backendAppId: 'org.dpppt.demo',
+              publicKeyBase64:
+                'LS0tLS1CRUdJTiBQVUJMSUMgS0VZLS0tLS0KTUZrd0V3WUhLb1pJemowQ0FRWUlLb1pJemowREFRY0R' +
+                'RZ0FFSndKMkErS2taR0p6QlMzM3dEOUUyaEI1K3VNYgpZcitNU2pOUGhmYzR6Q2w2amdSWkFWVHBKbE' +
+                '0wSmI4RERqcDNRUDZhK2VEK1I1SFYyNzhROVN0SUhnPT0KLS0tLS1FTkQgUFVCTElDIEtFWS0tLS0t',
               dev: false,
             })
           }
@@ -127,6 +137,10 @@ export const Init: FunctionComponent = () => {
             connectBackend({
               type: 'discover',
               backendAppId: 'org.dpppt.demo',
+              publicKeyBase64:
+                'LS0tLS1CRUdJTiBQVUJMSUMgS0VZLS0tLS0KTUZrd0V3WUhLb1pJemowQ0FRWUlLb1pJemowREFRY0R' +
+                'RZ0FFSndKMkErS2taR0p6QlMzM3dEOUUyaEI1K3VNYgpZcitNU2pOUGhmYzR6Q2w2amdSWkFWVHBKbE' +
+                '0wSmI4RERqcDNRUDZhK2VEK1I1SFYyNzhROVN0SUhnPT0KLS0tLS1FTkQgUFVCTElDIEtFWS0tLS0t',
               dev: true,
             })
           }
@@ -159,6 +173,13 @@ export const Init: FunctionComponent = () => {
               onChangeText={setManualBucketBaseUrl}
             />
           </InputContainer>
+          <InputContainer>
+            <InputLabel>Public key in Base64:</InputLabel>
+            <StyledInput
+              value={manualPublicKeyBase64}
+              onChangeText={setManualPublicKeyBase64}
+            />
+          </InputContainer>
           <Button
             onPress={() =>
               connectBackend({
@@ -166,6 +187,7 @@ export const Init: FunctionComponent = () => {
                 backendAppId: manualBackendAppId,
                 backendBaseUrl: manualReportBaseUrl,
                 bucketBaseUrl: manualBucketBaseUrl,
+                publicKeyBase64: manualPublicKeyBase64,
               })
             }
             title="Connect"

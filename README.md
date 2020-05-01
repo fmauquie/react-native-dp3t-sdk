@@ -73,7 +73,7 @@ import { useDp3tStatus } from 'react-native-dp3t-sdk';
 
 You need to initialize the SDK before calling most methods. You have 2 ways:
 
-#### initWithDiscovery(backendAppId: string, dev?: string): Promise&lt;void>
+#### initWithDiscovery(backendAppId: string, publicKeyBase64: string, dev?: string): Promise&lt;void>
 
 Initialize the SDK with the GitHub discovery service.
 
@@ -85,9 +85,10 @@ The discovery service is a JSON file on GitHub:
 Params:
 
 - `backendAppId`: The `appId` in the discovery service
+- `publicKeyBase64`:  The public key of the service. Necessary for sync in Android.
 - `dev` Should use the dev or production service ? Defaults to `false` (production)
 
-#### initManually(backendAppId: string, reportBaseUrl: string, bucketBaseUrl: string): Promise&lt;void>
+#### initManually(backendAppId: string, reportBaseUrl: string, bucketBaseUrl: string, publicKeyBase64: string): Promise&lt;void>
 
 Initialize the SDK by passing the backend URLs.
 
@@ -96,6 +97,7 @@ Params:
 - `backendAppId`: Unique ID for the backend, used internally by the SDK to reset the sync caches when it changes (I think)
 - `reportBaseUrl`: Report URL for the backend (should be provided by your backend provider)
 - `bucketBaseUrl`: Bucket URL for the backend (should be provided by your backend provider)
+- `publicKeyBase64`:  The public key of the service. Necessary for sync in Android.
 
 ### API
 

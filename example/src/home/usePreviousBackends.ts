@@ -7,10 +7,12 @@ export type Backend =
       backendAppId: string;
       backendBaseUrl: string;
       bucketBaseUrl: string;
+      publicKeyBase64: string;
     }
   | {
       type: 'discover';
       backendAppId: string;
+      publicKeyBase64: string;
       dev: boolean;
     };
 

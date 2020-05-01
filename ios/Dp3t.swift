@@ -122,7 +122,7 @@ class Dp3t: RCTEventEmitter, DP3TTracingDelegate {
     }
     
     @objc
-    func initWithDiscovery(_ backendAppId: String, dev: Bool, resolve: @escaping RCTPromiseResolveBlock, reject: @escaping RCTPromiseRejectBlock) -> Void {
+    func initWithDiscovery(_ backendAppId: String, publicKeyBase64: String, dev: Bool, resolve: @escaping RCTPromiseResolveBlock, reject: @escaping RCTPromiseRejectBlock) -> Void {
         DispatchQueue.main.async {
             do {
                 try DP3TTracing.initialize(with: .discovery(backendAppId, enviroment: dev ? .dev : .prod))
@@ -135,12 +135,12 @@ class Dp3t: RCTEventEmitter, DP3TTracingDelegate {
     }
 
     @objc
-    func initManually(_ backendAppId: String, reportBaseUrl: String, bucketBaseUrl: String, resolve: @escaping RCTPromiseResolveBlock, reject: @escaping RCTPromiseRejectBlock) -> Void {
+    func initManually(_ backendAppId: String, reportBaseUrl: String, bucketBaseUrl: String, publicKeyBase64: String, resolve: @escaping RCTPromiseResolveBlock, reject: @escaping RCTPromiseRejectBlock) -> Void {
         DispatchQueue.main.async {
             do {
                 let reportUrl = URL(string: reportBaseUrl)!
                 let bucketUrl = URL(string: bucketBaseUrl)!
-                try DP3TTracing.initialize(with: .manual(.init(appId: backendAppId, bucketBaseUrl: bucketUrl, reportBaseUrl: reportUrl, jwtPublicKey: nil)))
+                try DP3TTracing.initialize(with: .manual(.init(appId: backendAppId, bucketBaseUrl: bucketUrl, reportBaseUrl: reportUrl, jwtPublicKey: Data(base64Encoded: publicKeyBase64))))
                 DP3TTracing.delegate = self
                 resolve(nil)
             } catch {

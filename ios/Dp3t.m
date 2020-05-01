@@ -10,6 +10,7 @@ RCT_EXTERN_METHOD(
 
 RCT_EXTERN_METHOD(
                   initWithDiscovery: (NSString)backendAppId
+                  publicKeyBase64: (NSString) publicKeyBase64
                   dev: (BOOL) dev
                   resolve: (RCTPromiseResolveBlock)resolve
                   reject: (RCTPromiseRejectBlock)reject
@@ -19,6 +20,7 @@ RCT_EXTERN_METHOD(
                   initManually: (NSString)backendAppId
                   reportBaseUrl: (NSString) reportBaseUrl
                   bucketBaseUrl: (NSString) bucketBaseUrl
+                  publicKeyBase64: (NSString) publicKeyBase64
                   resolve: (RCTPromiseResolveBlock)resolve
                   reject: (RCTPromiseRejectBlock)reject
                   )

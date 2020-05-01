@@ -176,13 +176,15 @@ export async function isInitialized(): Promise<boolean> {
  * - for dev: https://github.com/DP-3T/dp3t-discovery/blob/master/discovery_dev.json
  *
  * @param backendAppId The `appId` in the discovery service
+ * @param publicKeyBase64 The public key of the service. Necessary for sync in Android.
  * @param dev Should use the dev or production service ?
  */
 export function initWithDiscovery(
   backendAppId: string,
+  publicKeyBase64: string,
   dev = false
 ): Promise<void> {
-  return Dp3t.initWithDiscovery(backendAppId, dev);
+  return Dp3t.initWithDiscovery(backendAppId, publicKeyBase64, dev);
 }
 
 /**
@@ -191,13 +193,20 @@ export function initWithDiscovery(
  * @param backendAppId Unique ID for the backend, used internally by the SDK to reset the sync caches when it changes (I think)
  * @param reportBaseUrl Report URL for the backend (should be provided by your backend provider)
  * @param bucketBaseUrl Bucket URL for the backend (should be provided by your backend provider)
+ * @param publicKeyBase64 The public key of the service. Necessary for sync in Android.
  */
 export function initManually(
   backendAppId: string,
   reportBaseUrl: string,
-  bucketBaseUrl: string
+  bucketBaseUrl: string,
+  publicKeyBase64: string
 ): Promise<void> {
-  return Dp3t.initManually(backendAppId, reportBaseUrl, bucketBaseUrl);
+  return Dp3t.initManually(
+    backendAppId,
+    reportBaseUrl,
+    bucketBaseUrl,
+    publicKeyBase64
+  );
 }
 
 /**
