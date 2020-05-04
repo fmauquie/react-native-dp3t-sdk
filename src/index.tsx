@@ -338,11 +338,13 @@ export function addStatusUpdatedListener(
  */
 export async function requestPermissions(rationale?: Rationale) {
   if (Platform.OS === 'android') {
-    await Dp3t.checkBatteryOptimizationDeactivated();
-    return await PermissionsAndroid.request(
+    const permissionsStatus = await PermissionsAndroid.request(
       'android.permission.ACCESS_FINE_LOCATION',
       rationale
     );
+    await Dp3t.checkBatteryOptimizationDeactivated();
+
+    return permissionsStatus;
   }
   return 'ios';
 }
