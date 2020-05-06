@@ -78,13 +78,31 @@ type HealthStatus =
   /**
    * The phone has made a handshake with a contact that was tested positive.
    *
-   * You will see the list of these contacts in `matchedContacts`
+   * You will see the list of expositions in `exposedDays`
    */
   | 'exposed'
   /**
    * The user has declared they have been tested positive using sendIAmInfected().
    */
   | 'infected';
+
+/**
+ * A contact with an exposed person
+ */
+type ExposedDay = {
+  /**
+   * Some internal unique ID. Can not be used to identify a contact, but can serve as a React `key`
+   */
+  id: number;
+  /**
+   * Date we saw this contact. This is set to a start of day, e.g. midnight GMT
+   */
+  exposedDate: Date;
+  /**
+   * Date the contact reported themselves as exposed.
+   */
+  reportDate: Date;
+};
 
 /**
  * Status of the tracing SDK
@@ -148,13 +166,11 @@ interface TracingStatus {
    */
   nativeErrorArg?: Object;
   /**
-   * The contacts that were infected.
+   * The days you were exposed.
    *
    * The array always carry a value, but it will only be filled if `healthStatus === 'exposed'`
-   *
-   * THIS IS DEBUG DATA and it will be removed in beta (Android removed it in 0.1.12)
    */
-  matchedContacts: { id: number; reportDate: Date }[];
+  exposedDays: ExposedDay[];
 }
 
 /**
@@ -245,9 +261,18 @@ const convertStatus = (platformStatus: any) => ({
   lastSyncDate: platformStatus.lastSyncDate
     ? new Date(parseInt(platformStatus.lastSyncDate, 10))
     : null,
-  matchedContacts: platformStatus.matchedContacts.map(
-    ({ id, reportDate }: { id: number; reportDate: string }) => ({
+  exposedDays: platformStatus.exposedDays.map(
+    ({
       id,
+      exposedDate,
+      reportDate,
+    }: {
+      id: number;
+      exposedDate: string;
+      reportDate: string;
+    }) => ({
+      id,
+      exposedDate: new Date(parseInt(exposedDate, 10)),
       reportDate: new Date(parseInt(reportDate, 10)),
     })
   ),

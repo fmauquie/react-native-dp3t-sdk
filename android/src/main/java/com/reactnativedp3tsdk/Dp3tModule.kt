@@ -71,15 +71,16 @@ class Dp3tModule(reactContext: ReactApplicationContext) : ReactContextBaseJavaMo
     map.putArray("errors", errors)
     map.putArray("nativeErrors", nativeErrors)
 
-    val matchedContacts = Arguments.createArray()
-    database.allMatchedContacts.forEach() {
+    val exposedDays = Arguments.createArray()
+    status.exposureDays.forEach() {
       val contact = Arguments.createMap()
       contact.putInt("id", it.id)
-      contact.putString("reportDate", it.date.toString(10))
-      matchedContacts.pushMap(contact)
+      contact.putString("exposedDate", it.exposedDate.startOfDayTimestamp.toString(10)) // yyyy-MM-dd
+      contact.putString("reportDate", it.reportDate.toString(10))
+      exposedDays.pushMap(contact)
     }
 
-    map.putArray("matchedContacts", matchedContacts)
+    map.putArray("exposedDays", exposedDays)
 
     return map
   }

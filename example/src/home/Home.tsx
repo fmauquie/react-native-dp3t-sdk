@@ -19,7 +19,7 @@ import {
   HorizontalContainer,
   ListItem,
   Loading,
-  LongDateWithTime,
+  LongDate,
   SafeContainer,
   ScrollContainer,
   TouchableRipple,
@@ -160,13 +160,15 @@ export const Home: FunctionComponent = () => {
             <ListItem>
               <Exposed>Exposed</Exposed>
             </ListItem>
-            {status.matchedContacts.map(({ id, reportDate }, i) => (
-              <HorizontalContainer key={i}>
+            {status.exposedDays.map(({ id, exposedDate, reportDate }) => (
+              <HorizontalContainer key={id}>
                 <Column>
-                  <Text>{id}:</Text>
+                  <Text>Exposed since</Text>
+                  <LongDate date={exposedDate} />
                 </Column>
                 <Column>
-                  <LongDateWithTime date={reportDate} />
+                  <Text>Reported on</Text>
+                  <LongDate date={reportDate} />
                 </Column>
               </HorizontalContainer>
             ))}

@@ -58,36 +58,40 @@ class Dp3t: RCTEventEmitter, DP3TTracingDelegate {
                 errors.append("bluetoothDisabled")
             case .permissonError:
                 errors.append("permissionMissing")
-            case let .caseSynchronizationError(syncError):
-                nativeErrorArg = syncError
+            case .caseSynchronizationError(errors: let error):
+                nativeErrorArg = error
                 errors.append("sync")
-            case let .networkingError(netError):
-                nativeErrorArg = netError
+            case .networkingError(error: let error):
+                nativeErrorArg = error
                 errors.append("sync")
-            case let .cryptographyError(cError):
-                nativeErrorArg = cError
+            case .cryptographyError(error: let error):
+                nativeErrorArg = error
                 errors.append("other")
-            case let .databaseError(dError):
-                nativeErrorArg = dError
+            case .databaseError(error: let error):
+                nativeErrorArg = error
                 errors.append("other")
             case .userAlreadyMarkedAsInfected:
+                errors.append("other")
+            case .coreBluetoothError(error: let error):
+                nativeErrorArg = error
                 errors.append("other")
             }
         }
         
         var healthStatus = ""
-        var matchedContacts: [[String : Any]] = []
+        var exposedDays: [[String : Any]] = []
         var nativeStatusArg: Int? = nil
         switch state.infectionStatus {
         case .healthy:
             healthStatus = "healthy"
         case .infected:
             healthStatus = "infected"
-        case let .exposed(days):
+        case .exposed(days: let days):
             healthStatus = "exposed"
-            matchedContacts = days.map { contact in
+            exposedDays = days.map { contact in
                 return [
                     "id": contact.identifier,
+                    "exposedDate": (contact.exposedDate.timeIntervalSince1970 * 1000).description,
                     "reportDate": (contact.reportDate.timeIntervalSince1970 * 1000).description
                 ]
             }
@@ -101,7 +105,7 @@ class Dp3t: RCTEventEmitter, DP3TTracingDelegate {
             "healthStatus": healthStatus,
             "errors": errors,
             "nativeErrors": nativeErrors,
-            "matchedContacts": matchedContacts
+            "exposedDays": exposedDays
         ] as [String : Any]
         if (state.lastSync != nil) {
             res["lastSyncDate"] = (state.lastSync!.timeIntervalSince1970 * 1000).description

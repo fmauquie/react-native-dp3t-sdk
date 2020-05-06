@@ -470,7 +470,7 @@ EXTERNAL SOURCES:
 
 CHECKOUT OPTIONS:
   DP3TSDK:
-    :commit: 07ab2b1102a8480b9d74780666c6815086cf7af4
+    :commit: ad2cc891fa1566cc54bfbe763c64c48ba5825e9f
     :git: https://github.com/fmauquie/dp3t-sdk-ios.git
 
 SPEC CHECKSUMS:

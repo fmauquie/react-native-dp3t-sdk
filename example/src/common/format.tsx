@@ -1,21 +1,18 @@
 import React, { FunctionComponent } from 'react';
 import { Text, TextProps } from 'react-native';
 
-const longDateWithTimeFormatter = new Intl.DateTimeFormat(['en'], {
+const longDateFormatter = new Intl.DateTimeFormat(['en'], {
   year: 'numeric',
   month: 'long',
+  weekday: 'long',
   day: '2-digit',
-  hour: '2-digit',
-  hour12: false,
-  minute: '2-digit',
-  second: '2-digit',
+  timeZone: 'UTC',
 });
 
 type DateProps = TextProps & {
   date: Date;
 };
 
-export const LongDateWithTime: FunctionComponent<DateProps> = ({
-  date,
-  ...props
-}) => <Text {...props}>{longDateWithTimeFormatter.format(date)}</Text>;
+export const LongDate: FunctionComponent<DateProps> = ({ date, ...props }) => (
+  <Text {...props}>{longDateFormatter.format(date)}</Text>
+);
